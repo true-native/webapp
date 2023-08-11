@@ -1,9 +1,12 @@
+import Head from 'next/head'
 import Image from 'next/image'
 
 export default function Home() {
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-between p-24">
-			<h1>True Native</h1>
-		</main>
+		<>
+			<main>
+				<h1>Homepage</h1>
+			</main>
+		</>
 	)
 }
