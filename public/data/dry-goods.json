@@ -1,0 +1,46 @@
+{
+	"dry_goods": [
+		{
+			"pid": "z67d6d6",
+			"category": "dry-goods",
+			"name": "Peruvian Cacao Nibs",
+			"sub": "Organic",
+            "card_text" : "Organic, Natural",
+			"description": "Organic cacao nibs are nature’s original chocolate chips! Made from crushed cacao beans, these raw nibs are crunchy, flavorful, and packed with powerful nutrients, antioxidants, and fiber.",
+			"ingredients": [
+				"Raw Cacao Nibs"
+			],
+			"sizes": ["15 oz pack"],
+			"certifications": [
+				"natural.svg", "organic.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-cacao-nibs.png"
+			},
+			"page_title": "Cacao Nibs - Chocolate in its purest form"
+		},
+		{
+			"pid": "A&sDA&D6",
+			"category": "dry-goods",
+			"name": "Goji Berry",
+			"sub": "Organic",
+            "card_text" : "Organic, Natural",
+			"description": "These 100% natural, sweet red fruits are renowned for their anti-aging effects, thanks to a rich concentration of antioxidants and vitamin A. Organic goji berries may also boost the immune system and support eye health.",
+			"ingredients": [
+				"Raw Goji Berry"
+			],
+			"sizes": ["15 oz pack"],
+			"certifications": [
+				"natural.svg", "organic.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-goji-berry.png"
+			},
+			"page_title": "Goji Berry - Extremely rich in vitamin A"
+		}
+    ]
+}

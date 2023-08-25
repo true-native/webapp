@@ -1,0 +1,104 @@
+{
+	"acai": [
+		{
+			"pid": "897e8F&E",
+			"category": "acai",
+			"name": "Açaí Puree Premium",
+			"sub": "Organic",
+            "card_text" : "Organic, Non GMO, Koscher, Natural",
+			"description": "Nutrition at its best! Loaded with antioxidants and healthy fats that support strong skin, hair and nails, this Amazonian beauty berry is the perfect addition to your acai bowls, smoothies, & more.",
+			"ingredients": [
+				"100% organic",
+				"High in antioxidants (anthocyanins)",
+				"Source of plant-based omegas-3s",
+				"Freeze-dried to preserve vital nutrients",
+				"Contains no added sugar or fillers"
+			],
+			"sizes": ["10 oz pack", "20 oz pack"],
+			"certifications": [
+				"gluten.svg", "gmo.svg", "kosher.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-acai-puree-premium-pckg.png"
+			},
+			"page_title": "Açaí Puree Premium - The best açaí there is!"
+		},
+		{
+			"pid": "87dw7d8w",
+			"category": "acai",
+			"name": "Açaí with Guaraná",
+			"sub": "Organic",
+            "card_text" : "Organic, Non GMO",
+			"description": "Nutrition at its best! Loaded with antioxidants and healthy fats that support strong skin, hair and nails, this Amazonian beauty berry is the perfect addition to your acai bowls, smoothies, & more.",
+			"ingredients": [
+				"100% organic",
+				"Guaraná berry",
+				"High in antioxidants (anthocyanins)",
+				"Source of plant-based omegas-3s",
+				"Freeze-dried to preserve vital nutrients",
+				"Contains no added sugar or fillers"
+			],
+			"sizes": ["20 oz pack"],
+			"certifications": [
+				"gluten.svg", "gmo.svg", "kosher.svg", "natural.svg", "organic.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-acai-with-guarana-pckg.png"
+			},
+			"page_title": "Açaí with Guaraná - The best açaí there is!"
+		},
+		{
+			"pid": "987d68w79",
+			"category": "acai",
+			"name": "Açaí Puree Medium",
+			"sub": "Organic",
+            "card_text" : "Organic, Non GMO, Koscher, Natural",
+			"description": "Nutrition at its best! Loaded with antioxidants and healthy fats that support strong skin, hair and nails, this Amazonian beauty berry is the perfect addition to your acai bowls, smoothies, & more.",
+			"ingredients": [
+				"100% organic",
+				"High in antioxidants (anthocyanins)",
+				"Source of plant-based omegas-3s",
+				"Freeze-dried to preserve vital nutrients",
+				"Contains no added sugar or fillers"
+			],
+			"sizes": ["20 oz pack"],
+			"certifications": [
+				"kosher.svg", "natural.svg", "organic.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-acai-puree-medium-pckg.png"
+			},
+			"page_title": "Açaí Puree Medium - The best açaí there is!"
+		},
+		{
+			"pid": "87d8d8dd",
+			"category": "acai",
+			"name": "Açaí Sorbet",
+			"sub": "Organic",
+            "card_text" : "Organic, Non GMO, Koscher, Natural",
+			"description": "Nutrition at its best! Loaded with antioxidants and healthy fats that support strong skin, hair and nails, this Amazonian beauty berry is the perfect addition to your acai bowls, smoothies, & more.",
+			"ingredients": [
+				"Organic açaí berry",
+				"Water",
+				"Citric Acid",
+				"Gluten Free"
+			],
+			"sizes": ["3 Gallon Tub"],
+			"certifications": [
+				"organic.svg", "natural.svg", "gmo.svg", "kosher.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-acai-sorbet.png"
+			},
+			"page_title": "Açaí Sorbet - Purest açaí there is!"
+		}
+    ]
+}

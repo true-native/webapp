@@ -1,12 +1,21 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import HeroSection from '../sections/HeroSection'
+import QualitySection from '../sections/QualitySection'
+import ExplorerSection from '../sections/ExplorerSection'
+import PicturesSection from '../sections/PicturesSection'
+import Featured from '../sections/FeaturedSection'
 
 export default function Home() {
 	return (
-		<>
-			<main>
-				<h1>Homepage</h1>
-			</main>
-		</>
+		<main>
+			<HeroSection/>
+
+			<QualitySection/>
+
+			<Featured/>
+
+			<ExplorerSection />
+
+			<PicturesSection />
+		</main>
 	)
 }

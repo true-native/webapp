@@ -1,0 +1,46 @@
+{
+	"iqf_fruits": [
+		{
+			"pid": "65d65d65",
+			"category": "iqf-fruits",
+			"name": "Apple Sliced",
+			"sub": "Natural",
+            "card_text" : "Natural",
+			"description": "Apple are picked at optimum ripeness to ensure maximum organoleptic quality. The fruit are sorted and packed in our own facilities in Saint-Laurent d’Agny following an ultra-fast process at controlled temperature in order to guarantee optimum quality for our IQF fruit.",
+			"ingredients": [
+				"IQF Frozen Apple"
+			],
+			"sizes": ["20 oz pack"],
+			"certifications": [
+				"natural.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-apple-sliced-conventional.png"
+			},
+			"page_title": "Apple Sliced IQF - Natural and individual processed slices!"
+		},
+		{
+			"pid": "098d0w8d",
+			"category": "iqf-fruits",
+			"name": "Banana Sliced",
+			"sub": "Natural",
+            "card_text" : "Natural",
+			"description": "IQF sliced bananas are then quickly and individually frozen to maintain their freshness at their best form. Arriving conveniently pre-sliced, adding these bananas to your menu allows so many versatile options, while saving on the cost of labor.",
+			"ingredients": [
+				"IQF Frozen Banana"
+			],
+			"sizes": ["20 oz pack"],
+			"certifications": [
+				"natural.svg"
+			],
+			"images": {
+				"thumb": "banana",
+				"medium": "apple",
+				"large": "true-native-banana-sliced-conventional.png"
+			},
+			"page_title": "Banana Sliced IQF - Natural and individual processed slices!"
+		}
+    ]
+}

@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './categories/**/*.{html,js,ts,jsx,tsx,mdx}',
+    './components/**/*.{html,js,ts,jsx,tsx,mdx}',
+    './app/**/*.{html,js,ts,jsx,tsx,mdx}',
+    './sections/**/*.{html,js,ts,jsx,tsx,mdx}',
+    './utils/**/*.{html,js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -42,10 +44,11 @@ module.exports = {
       },
       boxShadow: {
         'center': '0 3px 20px 5px rgba(0, 0, 0, 0.1)',
-        'nav' : '0px 10px 200px 2px rgba(0,0,0, 0.7)'
+        'mobile-nav' : '0px 10px 200px 2px rgba(0,0,0, 0.7)',
+        'nav': '0 3px 20px 2px rgba(0,0,0, 0.08)'
       },
       backgroundImage: {
-        'explorer': "url('../../public/resources/images/true-native-explorer.webp')"
+        'explorer': "url('/resources/images/true-native-explorer.webp')"
       },
       gridTemplateRows: {
         'pictures': '0.5fr 1fr 1.5fr 1fr'
@@ -61,5 +64,4 @@ module.exports = {
       '4xl': '2560px',
     }
   },
-  plugins: [],
 }
