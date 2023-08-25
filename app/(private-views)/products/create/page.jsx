@@ -8,7 +8,7 @@ import axios from 'axios'
 import { useAuth } from '../../../../contexts/AuthContext'
 import { storage } from '../../../../config/firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { notify, notifyLoading } from '../../../../utils/Notify'
+import { notify, notifyLoading } from '../../../../utils/notify'
 import RectButton from '../../../../components/buttons/RectButton'
 import PrivateLayout from '../../../(private-views)/_layout'
 
