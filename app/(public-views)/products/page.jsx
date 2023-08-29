@@ -53,7 +53,7 @@ const Products = () => {
 		<main className="w-full min-h-[100vh] 3xl:w-10/12 mx-auto">
 			<AnimatePresence>
 				<div className="w-11/12 mx-auto flex justify-between mt-8 flex-wrap xl:flex-nowrap items-center">
-					<button className="flex justify-between items-center py-2 px-7 text-primary-300 bg-slate-100 rounded-full shadow-lg"
+					<button className="flex justify-between items-center py-2 px-7 text-primary-300 bg-white border border-slate-300 rounded-full shadow-lg"
 						onClick={() => setIsFilterOpen(prev => !prev)}>
 						<p>Filters</p>
 						<IoOptionsOutline className="ml-3"/>

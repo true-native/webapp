@@ -5,7 +5,7 @@ import { IoArrowForward } from 'react-icons/io5'
 const ProductCard = ({product}) => {
     return (
         <Link
-            className='group p-3 border-2 border-transparent hover:border-gray-100 rounded-3xl shadow-nav shadow-gray-200 bg-white'
+            className='group p-3 border-2 border-transparent lg:hover:border-gray-100 rounded-3xl shadow-nav shadow-gray-200 bg-white'
             href={{pathname: `/products/${product.category}`, query: { product: JSON.stringify(product) }}}
         >
             <div className='overflow-clip rounded-2xl relative'>
@@ -17,7 +17,7 @@ const ProductCard = ({product}) => {
                     )
                 }
                 <img
-                    className='rounded-2xl w-full h-auto group-hover:rotate-6 group-hover:transition-all group-hover:scale-150 group-hover:ease-in-out group-hover:delay-200'
+                    className='rounded-2xl w-full h-auto lg:group-hover:rotate-6 lg:group-hover:transition-all lg:group-hover:scale-150 lg:group-hover:ease-in-out lg:group-hover:delay-200'
                     src={product.image_full}
                     alt={product.name}
                 />
