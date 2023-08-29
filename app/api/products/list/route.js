@@ -24,7 +24,7 @@ export async function GET(req, res) {
 		}
 		response = productsList;
 	} catch (error) {
-		response = {success: false, message: "Could not get products list"}
+		response = error
 	}
 
 	return NextResponse.json(response);

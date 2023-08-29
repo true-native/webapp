@@ -1,59 +1,119 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import Tabs from '../../../components/tabs/Tabs'
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
+import { IoOptionsOutline, IoSearch } from "react-icons/io5"
+import ProductsFilter from "../../../components/filters/ProductsFilter"
 import ProductCard from "../../../components/cards/ProductCard"
+import ProductCategoryPill from '../../../components/pills/ProductCategoryPill'
+import { useState } from "react"
 
 const Products = () => {
+	const [isFilterOpen, setIsFilterOpen] = useState(false)
+	const [isSelectedCategoriesVisible, setIsSelectedCategoriesVisible] = useState(false)
+	const [selectedCategories, setSelectedCategories] = useState([])
+	const [filteredProducts, setFilteredProducts] = useState([])
 
     const productsListQuery = useQuery({
-        queryKey: ['products'],
+		queryKey: ['products'],
         queryFn: async () => await axios.get('/api/products/list').then((res) => res.data)
     })
 
+	const handleManipulateCategoriesArray = (category, checked) => {
+        if (checked) {
+            setSelectedCategories([...selectedCategories, category])
+        } else {
+            setSelectedCategories(selectedCategories.filter((item) => item.id !== category.id))
+        }
+    }
+
+	const handleFilterProducts = (e) => {
+		e.preventDefault()
+
+		setIsFilterOpen(false)
+
+		if (selectedCategories.length > 0) {
+			setIsSelectedCategoriesVisible(true)
+
+			const products = []
+
+			selectedCategories.forEach((cat) => {
+				const filtered = productsListQuery.data.filter((product) => product.category === cat.id)
+				filtered.forEach(item => products.push(item))
+			})
+
+			setFilteredProducts(products)
+		} else {
+			setFilteredProducts(productsListQuery.data)
+		}
+	}
+
     return (
-		<main className="w-11/12 flex flex-col text-center my-10 mx-auto 3xl:w-10/12 2xl:my-20 text-primary-500">
-			{
-				productsListQuery.isLoading ? <p>Loading Products</p> : null
-            }
-            {
-				productsListQuery.isError ? <strong>Could not get products</strong> : null
-            }
+		<main className="w-full min-h-[100vh] 3xl:w-10/12 mx-auto">
 			<AnimatePresence>
-				<div className="w-full my-5 gap-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 xl:my-10 mx-auto 3xl:my-8">
-					{
-						productsListQuery.data ? productsListQuery.data.map((prd) => (
-							<ProductCard product={prd} key={prd.pid}/>
-						)) : ''
-					}
+				<div className="w-11/12 mx-auto flex justify-between mt-8 flex-wrap xl:flex-nowrap items-center">
+					<button className="flex justify-between items-center py-2 px-7 text-primary-300 bg-slate-100 rounded-full shadow-lg"
+						onClick={() => setIsFilterOpen(prev => !prev)}>
+						<p>Filters</p>
+						<IoOptionsOutline className="ml-3"/>
+					</button>
+					<ProductsFilter
+						isFilterOpen={isFilterOpen}
+						setIsFilterOpen={setIsFilterOpen}
+						applyFilter={handleFilterProducts}
+						handleManipulateCategoriesArray={handleManipulateCategoriesArray}
+					/>
+					<div className="flex items-center gap-2">
+						{
+							selectedCategories.length > 0 && isSelectedCategoriesVisible ? (
+								selectedCategories.map((cat) => (
+									<ProductCategoryPill key={cat.id} text={cat.description} outlined/>
+								))
+							) : ''
+						}
+					</div>
+					{/* <div className="flex items-center mt-6 w-full xl:w-fit xl:mt-0">
+						<div className="relative w-full">
+							<input
+								type="text"
+								aria-label="search"
+								placeholder="Search product"
+								className="h-[40px] px-4 border-2 border-slate-300 rounded-full w-full pr-10 text-slate-400 placeholder-slate-300"
+							/>
+							<IoSearch className="absolute top-3 right-4 text-slate-400"/>
+						</div>
+					</div> */}
 				</div>
+				{
+					productsListQuery.isLoading ? <p className="flex items-center justify-center">Loading Products</p> : null
+				}
+				{
+					productsListQuery.isError ? <p className="flex items-center justify-center">Could not get products</p> : null
+				}
+				<motion.div
+					className="flex mx-auto"
+					key="modal"
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{duration: 2}}
+					exit={{ opacity: 0 }}
+				>
+					<section className='my-8 w-11/12 mx-auto gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+						{
+							filteredProducts?.length > 0 ? (
+								filteredProducts.map(product => (
+									<ProductCard product={product} key={product.pid}/>
+								))
+							) : (
+								productsListQuery.data?.map((prd) => (
+									<ProductCard product={prd} key={prd.pid}/>
+								))
+							)
+						}
+					</section>
+				</motion.div>
 			</AnimatePresence>
-				{/* {
-					Array.isArray(acaiProductsListQuery.data) ? (
-						<motion.main
-							className="flex mx-auto"
-							key="modal"
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							transition={{duration: 2}}
-							exit={{ opacity: 0 }}
-							>
-							<section className='w-full'>
-								<Tabs products={{
-									acai: acaiProductsListQuery.data,
-									// pitaya: productsListQuery.data.pitaya,
-									// granola: productsListQuery.data.granola,
-									// dry_goods: productsListQuery.data.dryGoods,
-									// iqf_fruits: productsListQuery.data.iqfFruits,
-									// organic_iqf_fruits: productsListQuery.data.organicIqfFruits
-								}}/>
-							</section>
-						</motion.main>
-					) : ''
-				} */}
 		</main>
 	)
 }

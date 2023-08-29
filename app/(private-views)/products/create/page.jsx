@@ -10,6 +10,7 @@ import { storage } from '../../../../config/firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { notify, notifyLoading } from '../../../../utils/notify'
 import RectButton from '../../../../components/buttons/RectButton'
+import ProductCategoryPill from '../../../../components/pills/ProductCategoryPill'
 import PrivateLayout from '../../../(private-views)/_layout'
 
 const AddProductPage = () => {
@@ -245,12 +246,7 @@ const AddProductPage = () => {
                                         <div id="ingredients-list" className='flex gap-2 flex-wrap'>
                                             {
                                                 productIngredients.map((ingredient) => (
-                                                    <div key={ingredient} className='flex justify-between items-center py-2 pl-4 pr-3 text-primary-300 bg-slate-100 rounded-full'>
-                                                        <p className='select-none'>{ingredient}</p>
-                                                        <button className='ml-3 bg-slate-200 rounded-full p-1 shadow-md' onClick={() => handleRemoveIngredient(ingredient)}>
-                                                            <IoClose/>
-                                                        </button>
-                                                    </div>
+                                                    <ProductCategoryPill text={ingredient} onClick={() => handleRemoveIngredient(ingredient)} key={ingredient}/>
                                                 ))
                                             }
                                         </div>
@@ -277,12 +273,7 @@ const AddProductPage = () => {
                                         <div id="ingredients-list" className='flex gap-2 flex-wrap'>
                                             {
                                                 productSizes.map((size) => (
-                                                    <div key={size} className='flex justify-between items-center py-2 pl-4 pr-3 text-primary-300 bg-slate-100 rounded-full'>
-                                                        <p className='select-none'>{size}</p>
-                                                        <button className='ml-3 bg-slate-200 rounded-full p-1 shadow-md' onClick={() => handleRemoveSize(size)}>
-                                                            <IoClose/>
-                                                        </button>
-                                                    </div>
+                                                    <ProductCategoryPill text={size} onClick={() => handleRemoveSize(size)} key={size}/>
                                                 ))
                                             }
                                         </div>
