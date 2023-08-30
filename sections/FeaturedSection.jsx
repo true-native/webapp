@@ -9,6 +9,8 @@ import RectButton from '../components/buttons/RectButton';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import ProductCardSkeleton from '../components/skeleton/ProductCardSkeleton'
+
 const londrina = Londrina_Solid({ subsets: ['latin'], weight: '400', })
 
 const Featured = () => {
@@ -27,12 +29,18 @@ const Featured = () => {
             </div>
 
             {
-                featuredProductsListQuery.isLoading ? <p>Loading Products</p> : null
-            }
-            {
                 featuredProductsListQuery.isError ? <strong>Could not get products</strong> : null
             }
             <div className="w-full my-5 gap-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 xl:my-10 mx-auto 3xl:my-8">
+                {
+                    featuredProductsListQuery.isLoading ?
+                    <>
+                        <ProductCardSkeleton/>
+                        <ProductCardSkeleton/>
+                        <ProductCardSkeleton/>
+                        <ProductCardSkeleton/>
+                    </> : null
+                }
                 {
                     featuredProductsListQuery.data ? featuredProductsListQuery.data.map((prd) => (
                         <ProductCard product={prd} key={prd.pid}/>
