@@ -14,14 +14,14 @@ const ProductDetailsPage = () => {
 
     return (
         <main>
-            <div className='w-11/12 md:px-5 xl:w-10/12 xl:px-8 flex items-center mx-auto pt-6 lg:pt-8 text-slate-400 text-sm'>
+            <div className='w-11/12 md:px-5 xl:w-10/12 xl:px-8 flex 3xl:w-8/12 items-center mx-auto pt-6 lg:pt-8 text-slate-400 text-sm'>
                 <Link href={'/products'} className='flex items-center underline underline-offset-4 lg:hover:text-primary-300'>Products</Link>
                 <p className='text-primary-300 mx-2'>
                     <IoArrowForwardOutline/>
                 </p>
                 <p>{product.name}</p>
             </div>
-            <div className='flex flex-col lg:flex-row md:px-10 lg:py-4 xl:justify-center 2xl:pb-14'>
+            <div className='flex flex-col lg:flex-row md:px-10 lg:py-4 xl:justify-center 2xl:pb-14 4xl:pb-32'>
                 <div className='lg:order-2 p-5 lg:w-6/12 lg:px-10 xl:w-5/12 3xl:w-4/12'>
                     <p className='font-semibold text-secondary-500'>{product.sub}</p>
                     <h1 className={`${londrina.className} text-3xl font-semibold text-primary-500`}>{product.name}</h1>

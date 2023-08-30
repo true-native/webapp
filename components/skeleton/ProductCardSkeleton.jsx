@@ -14,7 +14,7 @@ const ProductCardSkeleton = () => {
 
                 <div className='font-bold text-xl mt-4 mb-1 h-5 bg-slate-200 rounded-md w-6/12'></div>
             </div>
-            <span class="sr-only">Loading...</span>
+            <span className="sr-only">Loading...</span>
         </div>
     )
 }

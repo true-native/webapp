@@ -65,7 +65,7 @@ const Products = () => {
 						applyFilter={handleFilterProducts}
 						handleManipulateCategoriesArray={handleManipulateCategoriesArray}
 					/>
-					<div className="flex items-center gap-2">
+					<div className="hidden md:flex flex-wrap flex-shrink-0 mt-4 lg:mt-0 items-center gap-2">
 						{
 							selectedCategories.length > 0 && isSelectedCategoriesVisible ? (
 								selectedCategories.map((cat) => (
