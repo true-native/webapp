@@ -53,12 +53,11 @@ const MainNavigation = () => {
 				</ul>
 
 				<Link href="/" className={`${!user ? 'xl:w-4/12' : ''}`}>
-					<Image
+					<img
 						src="/true-native-logo.svg"
 						alt="True Native"
 						width={170}
 						height={120}
-						priority
 						className={`${!user ? 'mx-auto' : ''}`}
 					/>
 				</Link>

@@ -10,7 +10,7 @@ const Footer = () => {
         <>
             <footer className='bg-primary-700 flex flex-col items-start justify-between w-full pt-[65px] pb-[50px] px-[40px] lg:flex-row lg:p-[50px] lg:items-center 2xl:py-[50px] 2xl:px-[100px]'>
                 <Link href="/">
-                    <Image
+                    <img
                         src="/true-native-logo-white.svg"
                         alt="True Native"
                         width={150}

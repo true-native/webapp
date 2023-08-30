@@ -6,6 +6,7 @@ import axios from "axios"
 import { IoOptionsOutline, IoSearch } from "react-icons/io5"
 import ProductsFilter from "../../../components/filters/ProductsFilter"
 import ProductCard from "../../../components/cards/ProductCard"
+import ProductCardSkeleton from '../../../components/skeleton/ProductCardSkeleton'
 import ProductCategoryPill from '../../../components/pills/ProductCategoryPill'
 import { useState } from "react"
 
@@ -85,12 +86,21 @@ const Products = () => {
 						</div>
 					</div> */}
 				</div>
+
 				{
-					productsListQuery.isLoading ? <p className="flex items-center justify-center">Loading Products</p> : null
+					productsListQuery.isLoading ?
+					<div className='my-8 w-11/12 mx-auto gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+						<ProductCardSkeleton/>
+						<ProductCardSkeleton/>
+						<ProductCardSkeleton/>
+						<ProductCardSkeleton/>
+						<ProductCardSkeleton className="hidden lg:block"/>
+						<ProductCardSkeleton className="hidden lg:block"/>
+						<ProductCardSkeleton className="hidden lg:block"/>
+						<ProductCardSkeleton className="hidden lg:block"/>
+					</div> : null
 				}
-				{
-					productsListQuery.isError ? <p className="flex items-center justify-center">Could not get products</p> : null
-				}
+
 				<motion.div
 					className="flex mx-auto"
 					key="modal"
@@ -100,6 +110,9 @@ const Products = () => {
 					exit={{ opacity: 0 }}
 				>
 					<section className='my-8 w-11/12 mx-auto gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+						{
+							productsListQuery.isError ? <p className="flex items-center justify-center">Could not get products</p> : null
+						}
 						{
 							filteredProducts?.length > 0 ? (
 								filteredProducts.map(product => (
