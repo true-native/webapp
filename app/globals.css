@@ -26,3 +26,8 @@
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
 }
+
+input[type='text'],
+textarea {
+	@apply focus-visible:outline-1 focus-visible:outline-primary-300 focus-visible:ring-4 focus-visible:ring-primary-100/50;
+}
