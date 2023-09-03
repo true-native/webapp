@@ -3,9 +3,9 @@
 import React, { useState, useRef } from 'react'
 import { IoSend } from 'react-icons/io5'
 
-import Input from '../inputs/Input'
-import TextArea from '../inputs/TextArea'
 import RectButton from '../buttons/RectButton'
+import axios from 'axios'
+import { notify, notifyLoading } from '../../utils/notify'
 
 const ContactForm = () => {
 
@@ -18,6 +18,7 @@ const ContactForm = () => {
     const [emailError, setEmailError] = useState(false)
     const [subjectError, setSubjectError] = useState(false)
     const [messageError, setMessageError] = useState(false)
+	const [isSendMessageButtonEnabled, setIsSendMessageButtonEnabled] = useState(false)
 
     const [formData, setFormData] = useState({
         name: "",
@@ -28,18 +29,22 @@ const ContactForm = () => {
 
 	const handleNameChange = () => {
 		!nameRef.current.value || nameRef.current.value.length < 3 ? setNameError(true) : (setNameError(false), setFormData({...formData, name: nameRef.current.value }))
+		handleToggleSendMessageButton()
 	}
 
 	const handleEmailChange = () => {
 		!emailRef.current.value || !handleValidateEmailPattern(emailRef.current.value) ? setEmailError(true) : (setEmailError(false), setFormData({...formData, email: emailRef.current.value }))
+		handleToggleSendMessageButton()
 	}
 
 	const handleSubjectChange = () => {
 		!subjectRef.current.value || subjectRef.current.value.length < 3 ? setSubjectError(true) : (setSubjectError(false), setFormData({...formData, subject: subjectRef.current.value }))
+		handleToggleSendMessageButton()
 	}
 
 	const handleMessageChange = () => {
 		!messageRef.current.value ? setMessageError(true) : (setMessageError(false), setFormData({...formData, message: messageRef.current.value }))
+		handleToggleSendMessageButton()
 	}
 
     const handleValidateEmailPattern = (email) => {
@@ -47,9 +52,48 @@ const ContactForm = () => {
         return false
     }
 
-    const handleSubmit = (e) => {
+	const handleToggleSendMessageButton = () => {
+		if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+			setIsSendMessageButtonEnabled(false)
+		} else {
+			setIsSendMessageButtonEnabled(true)
+		}
+	}
+
+	const handleClearForm = () => {
+		setFormData({
+			name: '',
+			email: '',
+			subject: '',
+			message: ''
+		})
+
+		nameRef.current.value = ""
+		emailRef.current.value = ""
+		subjectRef.current.value = ""
+		messageRef.current.value = ""
+
+		setIsSendMessageButtonEnabled(false)
+	}
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(formData)
+		const toastId = notifyLoading('Sending Message...')
+
+		try {
+			await axios.post('/api/contact', formData).then((res) => {
+				if (res.data.messageId) {
+					notify('success', 'Message Sent Successfully', null, null, toastId)
+				} else {
+					notify('error', 'Could Not Send Message', null, null, toastId)
+				}
+			})
+		} catch (error) {
+			console.error(error)
+			notify('error', 'Something Went Wrong', null, null, toastId)
+		}
+
+		handleClearForm()
     }
 
 	return (
@@ -91,7 +135,7 @@ const ContactForm = () => {
 					className={`border-2 border-gray-200 mb-4 px-4 py-2 rounded-md resize-none ${messageError ? 'border-red-400' : ''}`} placeholder='Tell me more about it...'
 				></textarea>
 			</div>
-			<RectButton text='Send Message' iconRight={<IoSend/>} variant='secondary' full onClick={(e) => handleSubmit(e)}/>
+			<RectButton disabled={isSendMessageButtonEnabled ? false : true} text='Send Message' iconRight={<IoSend/>} variant='secondary' full onClick={(e) => handleSubmit(e)}/>
 		</form>
 	)
 }
