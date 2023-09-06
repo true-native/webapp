@@ -23,7 +23,7 @@ const ProductCard = ({product}) => {
                 />
             </div>
             <div className='px-2 pt-4 pb-2 text-left'>
-                <h3 className='font-bold text-xl mt-2 mb-1 text-primary-400'>{product.name}</h3>
+                <h3 className='font-semibold text-xl mt-2 mb-1 text-primary-400'>{product.name}</h3>
                 <p className='text-slate-500 text-base line-clamp-2'>
                     {product.card_text}
                 </p>

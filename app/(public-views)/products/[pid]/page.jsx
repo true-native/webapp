@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import londrina from '../../../layout'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { IoArrowForwardOutline } from 'react-icons/io5'
+import { IoArrowForwardOutline, IoChevronForward } from 'react-icons/io5'
 
 const ProductDetailsPage = () => {
     const searchParams = useSearchParams()
@@ -14,10 +14,10 @@ const ProductDetailsPage = () => {
 
     return (
         <main>
-            <div className='w-11/12 md:px-5 xl:w-10/12 xl:px-8 flex 3xl:w-8/12 items-center mx-auto pt-6 lg:pt-8 text-slate-400 text-sm'>
-                <Link href={'/products'} className='flex items-center underline underline-offset-4 lg:hover:text-primary-300'>Products</Link>
-                <p className='text-primary-300 mx-2'>
-                    <IoArrowForwardOutline/>
+            <div className='w-11/12 md:px-5 xl:w-10/12 xl:px-8 flex 3xl:w-8/12 items-center mx-auto pt-6 lg:pt-8 text-slate-500'>
+                <Link href={'/products'} className='flex items-center  lg:hover:text-primary-200'>Products</Link>
+                <p className='text-primary-200 mx-2'>
+                    <IoChevronForward/>
                 </p>
                 <p>{product.name}</p>
             </div>
@@ -49,7 +49,7 @@ const ProductDetailsPage = () => {
                     </div>
                 </div>
                 <div className='lg:order-1 lg:w-6/12 xl:w-5/12 3xl:w-4/12 lg:mt-5'>
-                    <img src={`${product.image_full}`} alt="" className='md:rounded-3xl'/>
+                    <img src={`${product.image_full}`} alt=""/>
                 </div>
                 <div className="p-5 md:p-10 mb-10 lg:hidden">
                     <p className='py-3 text-slate-500'>{product.description}</p>
