@@ -42,9 +42,7 @@ const Featured = () => {
                     </> : null
                 }
                 {
-                    featuredProductsListQuery.data ? featuredProductsListQuery.data.map((prd) => (
-                        <ProductCard product={prd} key={prd.pid}/>
-                    )) : ''
+                    featuredProductsListQuery.data ? featuredProductsListQuery.data.map((prd, idx) => idx < 4 ? <ProductCard product={prd} key={prd.pid}/> : '') : ''
                 }
             </div>
             <div className="mt-4 mx-auto 3xl:mt-8">

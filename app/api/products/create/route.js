@@ -16,7 +16,8 @@ export async function POST(request) {
         productNew,
         productPageTitle,
         productSizes,
-        productSub
+        productSub,
+        productSku
     } = await request.json();
 
 	let response = null;
@@ -38,7 +39,9 @@ export async function POST(request) {
                 new: productNew,
                 page_title: productPageTitle,
                 sizes: productSizes,
-                sub: productSub
+                sub: productSub,
+                sku: productSku,
+                status: 'active'
 			}
 		)
 		response = newProductRef;

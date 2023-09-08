@@ -19,12 +19,14 @@ export default function RootLayout({ children }) {
 
     return (
 		<html lang="en" className={poppins.className}>
-			<body className='relative top-[90px] lg:top-[100px]'>
+			<body>
 				<AuthContextProvider>
 					<QueryClientProvider client={queryClient}>
 						<MainNavigation/>
 						<MobileNavigation />
-							{children}
+							<div className='mt-[90px] lg:mt-[100px]'>
+								{children}
+							</div>
 						<Footer/>
 					</QueryClientProvider>
 				</AuthContextProvider>

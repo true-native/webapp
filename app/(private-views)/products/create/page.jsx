@@ -37,6 +37,7 @@ const AddProductPage = () => {
     const [productNew, setProductNew] = useState("new_no")
     const [productIngredients, setProductIngredients] = useState([])
     const [productSizes, setProductSizes] = useState([])
+    const [productSku, setProductSku] = useState('')
     const [singleIngredient, setSingleIngredient] = useState('')
     const [singleSize, setSingleSize] = useState('')
 
@@ -61,6 +62,7 @@ const AddProductPage = () => {
         setProductNew("new_no")
         setProductIngredients([])
         setProductSizes([])
+        setProductSku('')
         setSingleIngredient('')
         setSingleSize('')
         setProductImage(null)
@@ -138,7 +140,7 @@ const AddProductPage = () => {
     }
 
     const handleGetInputValuesEmpty = () => {
-        return productName !== null && productSub !== null && productCategory !== null && productCardText !== null &&
+        return productName !== null && productSub !== null && productCategory !== null && productCardText !== null && productSku !== null &&
                 productDescription !== null && productFeatured !== null && productNew !== null && productImage !== null &&
                 productCertifications.length > 0 && productIngredients.length > 0 && productSizes.length > 0 && productPageTitle
         ? false : true
@@ -168,12 +170,12 @@ const AddProductPage = () => {
             productNew: productNew,
             productPageTitle: productPageTitle,
             productSizes: productSizes,
-            productSub: productSub
+            productSub: productSub,
+            productSku: productSku
         }
 
         await axios.post('/api/products/create', data).then((response) => {
-            if (response.status === 200) console.log('product created successfully')
-            notify('success', 'Product Created Successfully', null, null, toastId)
+            if (response.status === 200) notify('success', 'Product Created Successfully', null, null, toastId)
         }).catch((err) => {
             console.error(err)
             notify('error', 'Something Went Wrong!', null, null, toastId)
@@ -195,6 +197,13 @@ const AddProductPage = () => {
                                 <label htmlFor="page-title" className='text-primary-400 font-bold mb-2'>Page Title</label>
                                 <input type="text" className='w-full h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='page-title' aria-label='Page Title'
                                     value={productPageTitle} onChange={(e) => {setProductPageTitle(e.target.value); handleToggleCreateProductButton()}} placeholder='Type in the page title. It will show in the browser tab.'
+                                />
+                            </div>
+
+                            <div className="xl:flex xl:flex-col">
+                                <label htmlFor="product-sku" className='text-primary-400 font-bold mb-2'>Product SKU</label>
+                                <input type="text" className='w-full h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='product-sku' aria-label='Product SKU'
+                                    value={productSku} onChange={(e) => {setProductSku(e.target.value); handleToggleCreateProductButton()}} placeholder='Type in the product Stock Keeping Unit'
                                 />
                             </div>
 

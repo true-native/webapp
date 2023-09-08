@@ -5,7 +5,7 @@ import { IoClose } from 'react-icons/io5'
 const ProductsFilter = ({isFilterOpen, setIsFilterOpen, applyFilter, handleManipulateCategoriesArray}) => {
 
 	return (
-		<div className={`${!isFilterOpen? 'hidden' : 'block'} border border-slate-300 min-w-[310px] xl:w-[380px] absolute top-12 bg-white shadow-2xl z-10 p-6 rounded-xl`}>
+		<div className={`${!isFilterOpen? 'hidden' : 'block'} border border-slate-300 min-w-[310px] xl:w-[380px] absolute top-32 bg-white shadow-2xl z-10 p-6 rounded-xl`}>
 			<div className='w-full'>
 				<div className="flex items-center justify-between">
 					<label className='text-primary-300 font-semibold'>Categories</label>

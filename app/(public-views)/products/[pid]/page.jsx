@@ -24,23 +24,23 @@ const ProductDetailsPage = () => {
             <div className='flex flex-col lg:flex-row md:px-10 lg:py-4 xl:justify-center 2xl:pb-14 4xl:pb-32'>
                 <div className='lg:order-2 p-5 lg:w-6/12 lg:px-10 xl:w-5/12 3xl:w-4/12'>
                     <p className='font-semibold text-secondary-500'>{product.sub}</p>
-                    <h1 className={`${londrina.className} text-3xl font-semibold text-primary-500`}>{product.name}</h1>
+                    <h1 className={`${londrina.className} text-3xl font-semibold text-primary-300`}>{product.name}</h1>
 
                     <div className='hidden lg:block'>
                         <p className='py-3 text-slate-500'>{product.description}</p>
-                        <h3 className='text-primary-500 text-xl font-semibold py-2'>Ingredients</h3>
+                        <h3 className='text-primary-300 text-xl font-semibold py-2'>Ingredients</h3>
                         <ul>
                             {product.ingredients.map((ing, idx) => (
                                 <li className='text-slate-500' key={idx}>{ing}</li>
                             ))}
                         </ul>
-                        <h3 className='text-primary-500 text-xl font-semibold pt-5 py-2'>Available Sizes</h3>
+                        <h3 className='text-primary-300 text-xl font-semibold pt-5 py-2'>Available Sizes</h3>
                         <ul>
                             {product.sizes.map((sz, idx) => (
                                 <li className='text-slate-500' key={idx}>{sz}</li>
                             ))}
                         </ul>
-                        <h3 className='text-primary-500 text-xl font-semibold pt-5 py-2'>Certifications</h3>
+                        <h3 className='text-primary-300 text-xl font-semibold pt-5 py-2'>Certifications</h3>
                         <ul className='flex'>
                             {product.certifications.map((cert, idx) => (
                                 <img src={`../../resources/certifications/${cert}.svg`} alt="" key={idx} className='mr-2' />
@@ -53,19 +53,19 @@ const ProductDetailsPage = () => {
                 </div>
                 <div className="p-5 md:p-10 mb-10 lg:hidden">
                     <p className='py-3 text-slate-500'>{product.description}</p>
-                    <h3 className='text-primary-500 text-xl font-semibold py-2'>Ingredients</h3>
+                    <h3 className='text-primary-300 text-xl font-semibold py-2'>Ingredients</h3>
                     <ul>
                         {product.ingredients.map((ing, idx) => (
                             <li className='text-slate-500' key={idx}>{ing}</li>
                         ))}
                     </ul>
-                    <h3 className='text-primary-500 text-xl font-semibold pt-5 py-2'>Available Sizes</h3>
+                    <h3 className='text-primary-300 text-xl font-semibold pt-5 py-2'>Available Sizes</h3>
                     <ul>
                         {product.sizes.map((sz, idx) => (
                             <li className='text-slate-500' key={idx}>{sz}</li>
                         ))}
                     </ul>
-                    <h3 className='text-primary-500 text-xl font-semibold pt-5 py-2'>Certifications</h3>
+                    <h3 className='text-primary-300 text-xl font-semibold pt-5 py-2'>Certifications</h3>
                     <ul className='flex'>
                         {product.certifications.map((cert, idx) => (
                             <img src={`../../resources/certifications/${cert}.svg`} alt="" key={idx} className='mr-2' />

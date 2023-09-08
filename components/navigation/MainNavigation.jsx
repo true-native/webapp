@@ -19,7 +19,7 @@ const MainNavigation = () => {
     }
 
     return (
-        <nav className='hidden h-[100px] w-full lg:flex fixed z-20 top-0 left-0 bg-white shadow-nav'>
+        <nav className='hidden h-[100px] w-full lg:flex fixed z-20 top-0 left-0 bg-white shadow-nav '>
             <div className={`w-full px-4 3xl:w-11/12 3xl:mx-auto 3xl:px-10 flex items-center ${user ? 'justify-between' : ''}`}>
 				<ul className={`flex items-center h-full ${!user ? '4xl:w-4/12' : ''}`}>
 					<li className={`

@@ -10,17 +10,23 @@ export async function GET(req, res) {
 
 	try {
 		if (!prodCategory) {
-			const querySnapshot = await getDocs(collection(db, "products"));
-			querySnapshot.forEach((doc) => {
-				doc.id, " => ", productsList.push(doc.data());
+			const productsDoc = []
+			const q = query(collection(db, "products"), where("status", "==", "active"));
+			await getDocs(q).then((snap) => {
+				snap.forEach((doc) => {
+					productsDoc.push(doc.data())
+				})
 			});
+			productsDoc.forEach(product => productsList.push(product))
 		} else {
-			const q = query(collection(db, "products"));
-
-			const querySnapshot = await getDocs(q);
-			querySnapshot.forEach((doc) => {
-				doc.id, " => ", productsList.push(doc.data());
+			const productsDoc = []
+			const q = query(collection(db, "products"), where("category", "==", prodCategory));
+			await getDocs(q).then((snap) => {
+				snap.forEach((doc) => {
+					productsDoc.push(doc.data())
+				})
 			});
+			productsDoc.forEach(product => productsList.push(product))
 		}
 		response = productsList;
 	} catch (error) {

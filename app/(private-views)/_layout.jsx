@@ -3,6 +3,7 @@
 import { AuthContextProvider, useAuth } from '../../contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import ProductImageModal from '../../components/modals/ProductImageModal'
 
 export default function PrivateLayout({children}) {
     const {user, setUser} = useAuth()
@@ -10,6 +11,7 @@ export default function PrivateLayout({children}) {
 
     useEffect(() => {
         if (!user) {
+            router.push('/')
             setUser(null)
             return;
         }
