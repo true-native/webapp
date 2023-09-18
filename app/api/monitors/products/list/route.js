@@ -6,10 +6,6 @@ export async function POST(req, res) {
 	let productsList = [];
 	let response = null;
 
-    const { user } = await req.json()
-
-    if (!user) return NextResponse.json({ status: 500, message: 'Not authorized' });
-
 	try {
 		const querySnapshot = await getDocs(collection(db, "products"));
         querySnapshot.forEach((doc) => {

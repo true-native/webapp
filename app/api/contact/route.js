@@ -22,7 +22,7 @@ export async function POST(request) {
             html: `
                 <div>
                     <p>Hello there,</p></br></br>
-                    <p><strong>${name}</strong> just sent you a message from truenativeacai.com, regarding: <strong>${subject}</strong></p>
+                    <p><strong>${name}</strong> just sent you a message from <a href="https://truenativefoods.com" target="_blank">truenativefoods.com</a>, regarding: <strong>${subject}</strong></p>
                     <strong>This is what they wrote: </strong></br></br>
                     <p>${message}</p></br></br>
 

@@ -25,7 +25,7 @@ const Footer = () => {
                     </li>
                     <li className='my-8 mx-0 flex flex-col text-white font-bold lg:my-0 lg:mx-8 2xl:mx-12'>
                         Shop
-                        <Link href='/where-to-buy' className='my-2 font-normal text-primary-100'>Where to Buy</Link>
+                        <Link href='/' className='my-2 font-normal text-primary-100'>Where to Buy</Link>
                     </li>
                     <li className='my-8 mx-0 flex flex-col text-white font-bold lg:my-0 lg:mx-8 2xl:mx-12'>
                         Support

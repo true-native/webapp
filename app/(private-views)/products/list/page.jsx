@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PrivateLayout from '../../../(private-views)/_layout'
 
 import {
@@ -23,7 +23,6 @@ import DeleteProductModal from '../../../../components/modals/DeleteProductModal
 import ProductsTableSkeleton from '../../../../components/skeleton/ProductsTableSkeleton'
 
 const ProductsList = () => {
-    const { user } = useAuth()
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
     const [productToBeDeleted, setProductToBeDeleted] = useState({})
 
@@ -39,7 +38,8 @@ const ProductsList = () => {
 
     const productsListQuery = useQuery({
 		queryKey: ['admin-products'],
-        queryFn: async () => await axios.post('/api/monitors/products/list', {user}).then((res) => res.data)
+        queryFn: async () => await axios.post('/api/monitors/products/list').then((res) => res.data),
+        refetchOnMount: 'always'
     })
 
     const handleUpdateProductStatus = async (currentStatus, pid) => {
@@ -302,12 +302,12 @@ const ProductsList = () => {
                     :
                     Array.isArray(productsListQuery.data) && productsListQuery.data.length > 0 ? (
                         <>
-                            <div className='w-full xl:w-10/12 mx-auto flex items-center justify-between'>
+                            <div className='w-full xl:w-10/12 mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between'>
                                 <div>
                                     <h1 className='mt-5 text-2xl text-primary-400 font-bold'>Listed Products</h1>
                                     <p>These are all the products available in the system.</p>
                                 </div>
-                                <div className="flex items-center mt-6 w-full xl:w-fit xl:mt-0">
+                                <div className="flex items-center mt-6 w-full lg:w-fit xl:mt-0">
                                     <div className="relative w-full">
                                         <input
                                             // onChange={handleInputChange}
