@@ -65,6 +65,7 @@ const AdminPage = () => {
                             setEmailError(e.currentTarget.value ? false : true)
                             setEmailErrorMessage(!e.currentTarget.value ? 'Cannot be empty' : '')
                         }}
+                        placeholder='Enter your email'
                     />
                     {
                         emailErrorMessage && <small className='my-2 text-red-400 font-semibold'>{emailErrorMessage}</small>
@@ -79,6 +80,7 @@ const AdminPage = () => {
                             setPasswordError(e.currentTarget.value ? false : true)
                             setPasswordErrorMessage(!e.currentTarget.value ? 'Cannot be empty' : '')
                         }}
+                        placeholder='Enter your password'
                     />
                     {
                         passwordErrorMessage && <small className='my-2 text-red-400 font-semibold'>{passwordErrorMessage}</small>
