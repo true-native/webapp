@@ -16,6 +16,10 @@
 	@apply bg-primary-500;
 }
 
+.scroll-xs::-webkit-scrollbar {
+	height: 3px;
+}
+
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 .scroll-hidden::-webkit-scrollbar {
 	display: none;

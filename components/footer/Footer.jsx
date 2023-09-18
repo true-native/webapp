@@ -33,8 +33,8 @@ const Footer = () => {
                     </li>
                     <li className='my-8 mx-0 flex flex-col text-white font-bold lg:my-0 lg:mx-8 2xl:mx-12'>
                         Policies
-                        <Link href='/' className='my-2 font-normal text-primary-100'>Privacy Policy</Link>
-                        <Link href='/' className='my-2 font-normal text-primary-100'>Terms & Conditions</Link>
+                        <Link href='/privacy' className='my-2 font-normal text-primary-100'>Privacy Policy</Link>
+                        <Link href='/terms' className='my-2 font-normal text-primary-100'>Terms & Conditions</Link>
                     </li>
                 </ul>
                 <div className='flex lg:flex-col'>

@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProductCardSkeleton = () => {
     return (
-        <div role="status" className='p-3 border-2 border-transparent rounded-3xl shadow-nav shadow-gray-200 bg-white animate-pulse'>
+        <div role="status" className='p-3 border-2 border-transparent rounded-3xl shadow-nav shadow-gray-200 bg-white animate-pulse h-fit'>
             <div className='overflow-clip rounded-2xl relative'>
                 <div className='rounded-2xl w-full h-80 bg-slate-200'></div>
             </div>

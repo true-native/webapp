@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-table": "^8.9.7",

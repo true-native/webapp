@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import PrivateLayout from '../../../(private-views)/_layout'
 
 import {
@@ -15,13 +15,27 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '../../../../contexts/AuthContext'
 import { HiSortAscending } from 'react-icons/hi'
 import axios from 'axios'
-import { IoOpen, IoPencil, IoToggle, IoTrash } from 'react-icons/io5'
+import { IoOpenOutline, IoPencil, IoSearch, IoToggle, IoTrash } from 'react-icons/io5'
 import { notify, notifyLoading } from '../../../../utils/notify'
 import Link from 'next/link'
+import { v4 } from 'uuid'
+import DeleteProductModal from '../../../../components/modals/DeleteProductModal'
 import ProductsTableSkeleton from '../../../../components/skeleton/ProductsTableSkeleton'
 
 const ProductsList = () => {
     const { user } = useAuth()
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+    const [productToBeDeleted, setProductToBeDeleted] = useState({})
+
+    const handleCloseDeleteProductModal = () => {
+        setIsDeleteDialogOpen(false)
+        setProductToBeDeleted({})
+    }
+
+    const handleOpenDeleteProductModal = (info) => {
+        setIsDeleteDialogOpen(true)
+        setProductToBeDeleted(info)
+    }
 
     const productsListQuery = useQuery({
 		queryKey: ['admin-products'],
@@ -29,17 +43,46 @@ const ProductsList = () => {
     })
 
     const handleUpdateProductStatus = async (currentStatus, pid) => {
-        const toastId = notifyLoading('Updating product status...')
+        const toastId = notifyLoading('Updating product ...')
 
         let data = currentStatus === 'active' ? 'inactive' : 'active'
-        await axios.post('/api/monitors/products/update', { status: data, pid: pid }).then((response) => {
+        await axios.post('/api/monitors/products/update', { data: data, pid: pid, type: 'status' }).then((response) => {
             if (response.status === 200) {
-                notify('success', 'Status Updated Successfully', null, null, toastId)
+                notify('success', 'Updated Successfully', null, null, toastId)
                 productsListQuery.refetch()
             }
         }).catch((err) => {
             console.error(err)
-            notify('error', 'Could not update status!', null, null, toastId)
+            notify('error', 'Could not update product!', null, null, toastId)
+        })
+    }
+
+    const handleUpdateProductNewFlag = async (isNew, pid) => {
+        const toastId = notifyLoading('Updating product ...')
+
+        let data = isNew === 'new_yes' ? 'new_no' : 'new_yes'
+        await axios.post('/api/monitors/products/update', { data: data, pid: pid, type: 'new' }).then((response) => {
+            if (response.status === 200) {
+                notify('success', 'Updated Successfully', null, null, toastId)
+                productsListQuery.refetch()
+            }
+        }).catch((err) => {
+            console.error(err)
+            notify('error', 'Could not update product!', null, null, toastId)
+        })
+    }
+
+    const handleDeleteProduct = async (pid) => {
+        const toastId = notifyLoading('Deleting product ...')
+
+        await axios.delete('/api/monitors/products/delete', { params: { pid: pid } }).then((response) => {
+            if (response.status === 200) {
+                notify('success', 'product Deleted Successfully', null, null, toastId)
+                productsListQuery.refetch()
+            }
+        }).catch((err) => {
+            console.error(err)
+            notify('error', 'Could not delete product!', null, null, toastId)
         })
     }
 
@@ -56,7 +99,7 @@ const ProductsList = () => {
 
     const renderProductName = (info) => {
         return (
-            <div className='flex flex-col'>
+            <div className='flex flex-col whitespace-nowrap'>
                 <small className='text-primary-200 text-xs'>{info.getValue().sub}</small>
                 <p className='font-semibold'>{info.getValue().name}</p>
             </div>
@@ -92,20 +135,36 @@ const ProductsList = () => {
                 categoryName = 'Not Provided / Not Listed'
                 break;
         }
-        return categoryName
+        return (
+            <div className='whitespace-nowrap'>
+                {categoryName}
+            </div>
+        )
     }
 
     const renderProductNew = (info) => {
-        return info.getValue() === 'new_yes' ? (
-            <div className='px-4 py-1 text-sm font-semibold rounded-full bg-secondary-500/10 text-secondary-500 border border-secondary-500 w-fit'>New Product</div>
-        ) : ''
+        let displayNew = info.getValue().new === 'new_yes' ? 'Flagged as New' : 'Regular Product'
+        return (
+            <div className='flex items-center justify-between w-full'>
+                <div className='flex flex-col'>
+                    <p className='font-semibold'>{displayNew}</p>
+                    <small className='text-slate-400'>Show label in product card</small>
+                </div>
+                <IoToggle className={`text-3xl ml-4 cursor-pointer ${info.getValue().new === 'new_yes' ? 'text-green-500' : 'text-slate-500 rotate-180'}`}
+                    onClick={() => handleUpdateProductNewFlag(info.getValue().new, info.getValue().pid)}
+                />
+            </div>
+        )
     }
 
     const renderProductStatus = (info) => {
         let displayStatus = info.getValue().status === 'active' ? 'Active' : 'Inactive'
         return (
-            <div className='flex items-center justify-between w-full'>
-                {displayStatus}
+            <div className='flex items-center justify-between w-full whitespace-nowrap'>
+                <div className='flex flex-col'>
+                    <p className='font-semibold'>{displayStatus}</p>
+                    <small className='text-slate-400'>Product will be invisible when inactive</small>
+                </div>
                 <IoToggle className={`text-3xl ml-4 cursor-pointer ${info.getValue().status === 'active' ? 'text-green-500' : 'text-slate-500 rotate-180'}`}
                     onClick={() => handleUpdateProductStatus(info.getValue().status, info.getValue().pid)}
                 />
@@ -116,41 +175,47 @@ const ProductsList = () => {
     const renderProductPage = (info) => {
         return (
             <Link
-                className='text-primary-200 flex items-center gap-2 font-semibold text-sm'
+                className='flex items-center gap-2 px-4 h-[30px] text-sm font-semibold rounded-md text-blue-500 w-fit whitespace-nowrap hover:underline'
                 href={{pathname: `/products/${info.getValue().category}`, query: { product: JSON.stringify(info.getValue()) }}}
                 target='_blank'
             >
                 View Product Page
-                <IoOpen/>
+                <IoOpenOutline/>
             </Link>
         )
     }
 
-    const renderEditProductButton = (url) => {
-        if (!url) return ''
+    const renderEditProductButton = (info) => {
+        if (!info) return ''
 
         return (
-            <Link href={url} className='flex items-center justify-center bg-blue-500 w-[30px] h-[30px] rounded-md shadow-lg' target='_blank'>
+            <Link key={v4()}
+                className='flex items-center justify-center bg-blue-500 w-[30px] h-[30px] rounded-md shadow-lg'
+                href={{pathname: `/products/edit/${info.getValue().category}`, query: { product: JSON.stringify(info.getValue()) }}}
+            >
                 <IoPencil className='text-sm text-slate-200 p-0 m-0'/>
             </Link>
         )
     }
 
-    const renderDeleteProductButton = (url) => {
-        if (!url) return ''
+    const renderDeleteProductButton = (info) => {
+        if (!info) return ''
 
         return (
-            <Link href={url} className='flex items-center justify-center bg-red-500 w-[30px] h-[30px] rounded-md shadow-lg' target='_blank'>
+            <button key={v4()}
+                className='flex items-center justify-center bg-red-500 w-[30px] h-[30px] rounded-md shadow-lg'
+                onClick={() => handleOpenDeleteProductModal(info.getValue())}
+            >
                 <IoTrash className='text-sm text-slate-200 p-0 m-0'/>
-            </Link>
+            </button>
         )
     }
 
     const renderMonitorActions = (info) => {
         let actions = [];
 
-        actions.push(renderEditProductButton(info.getValue()))
-        actions.push(renderDeleteProductButton(info.getValue()))
+        actions.push(renderEditProductButton(info))
+        actions.push(renderDeleteProductButton(info))
 
         return actions;
     }
@@ -163,8 +228,8 @@ const ProductsList = () => {
             cell: info => renderProductImage(info),
         }),
         columnHelper.accessor('sku', {
-            cell: info => info.getValue(),
-            header: () => <span>SKU</span>,
+            cell: info => <div className='whitespace-nowrap'>{info.getValue()}</div>,
+            header: () => <div>SKU</div>,
         }),
         columnHelper.accessor(row => row, {
             id: 'name',
@@ -181,9 +246,13 @@ const ProductsList = () => {
             </div>,
             cell: info => renderProductCategory(info),
         }),
-        columnHelper.accessor('new', {
-            cell: info => <div className='flex justify-center'>{renderProductNew(info)}</div>,
-            header: () => <div className='flex justify-center'>New Product</div>,
+        columnHelper.accessor(row => row, {
+            id: 'new',
+            cell: info => <div className='flex justify-center whitespace-nowrap'>{renderProductNew(info)}</div>,
+            header: () => <div className="flex items-center justify-between">
+                New Product Flag
+                <HiSortAscending className='text-slate-400 dark:text-slate-400 ml-2'/>
+            </div>,
         }),
         columnHelper.accessor(row => row, {
             id: 'status',
@@ -203,7 +272,7 @@ const ProductsList = () => {
         columnHelper.accessor(row => row, {
             id: 'actions',
             header: () => <div className='text-center'>Actions</div>,
-            cell: info => <div className='flex items-center justify-center gap-2'>{renderMonitorActions(info)}</div>
+            cell: info => <div className='flex items-center justify-center gap-2 whitespace-nowrap'>{renderMonitorActions(info)}</div>
         }),
     ]
 
@@ -222,17 +291,37 @@ const ProductsList = () => {
 
     return (
         <PrivateLayout>
-            <main className="p-5 w-full min-h-[800px] relative">
-                {
-                    productsListQuery.isLoading ? <ProductsTableSkeleton /> : null
-                }
+            <main className="p-5 w-full min-h-[800px] 4xl:min-h-[1000px] relative pb-28">
                 {
                     productsListQuery.isError ? <p>Something went Wrong</p> : null
                 }
                 {
+                    productsListQuery.isLoading ? (
+                        <ProductsTableSkeleton />
+                    )
+                    :
                     Array.isArray(productsListQuery.data) && productsListQuery.data.length > 0 ? (
                         <>
-                            <div className='mt-8 overflow-x-auto shadow-md rounded-lg w-full'>
+                            <div className='w-full xl:w-10/12 mx-auto flex items-center justify-between'>
+                                <div>
+                                    <h1 className='mt-5 text-2xl text-primary-400 font-bold'>Listed Products</h1>
+                                    <p>These are all the products available in the system.</p>
+                                </div>
+                                <div className="flex items-center mt-6 w-full xl:w-fit xl:mt-0">
+                                    <div className="relative w-full">
+                                        <input
+                                            // onChange={handleInputChange}
+                                            // value={searchInputValue}
+                                            type="text"
+                                            aria-label="search"
+                                            placeholder="Search product"
+                                            className="h-[40px] px-4 border-2 border-slate-300 rounded-full w-full pr-10 text-slate-400 placeholder-slate-300"
+                                        />
+                                        <IoSearch className="absolute top-3 right-4 text-slate-400" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='mt-8 overflow-x-auto shadow-md rounded-lg w-full scroll-xs'>
                                 <table className='w-full bg-white border-slate-400 text-slate-500 shadow-lg text-left'>
                                     <thead className='text-slate-500 bg-slate-200'>
                                         {table?.getHeaderGroups()?.map(headerGroup => (
@@ -251,20 +340,20 @@ const ProductsList = () => {
                                     ))}
                                     </thead>
                                     <tbody>
-                                        {table?.getRowModel()?.rows.map(row => (
+                                        {table?.getRowModel().rows.map(row => (
                                             <tr key={row.id} className='bg-white border-b last-of-type:border-b-0'>
-                                            {row.getVisibleCells().map(cell => (
-                                                <td key={cell.id} className='px-6 py-2 border-r last-of-type:border-r-0'>
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </td>
-                                            ))}
+                                                {row.getVisibleCells().map(cell => (
+                                                    <td key={cell.id} className='px-6 py-2 border-r last-of-type:border-r-0'>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </td>
+                                                ))}
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
 
-                            <nav className="flex items-center justify-between pt-4" aria-label="Table navigation">
+                            <nav className="flex flex-col gap-4 lg:flex-row items-center justify-between pt-4" aria-label="Table navigation">
                                 <div className='flex items-center'>
                                     <select
                                         className='h-8 text-sm pl-1 pr-4 leading-tight border-slate-300 rounded-lg bg-slate-100 text-slate-600'
@@ -344,6 +433,13 @@ const ProductsList = () => {
                     ) : null
                 }
             </main>
+            <DeleteProductModal
+                isDeleteDialogOpen={isDeleteDialogOpen}
+                setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+                product={productToBeDeleted}
+                closeModal={handleCloseDeleteProductModal}
+                handleDeleteProduct={handleDeleteProduct}
+            />
         </PrivateLayout>
     )
 }

@@ -28,7 +28,7 @@ const Explorer = () => {
                 </p>
             </div>
             <img
-                className='absolute -bottom-12 pointer-events-none md:w-[50%] md:ml-16 lg:w-[35%] lg:ml-24 xl:ml-32 3xl:-bottom-20 3xl:ml-48'
+                className='absolute -bottom-16 pointer-events-none md:w-[50%] md:ml-16 lg:w-[45%] lg:ml-24 xl:w-[40%] xl:ml-32 2xl:w-[45%] 2xl:-bottom-20 2xl:ml-36 3xl:-bottom-32 3xl:ml-48 4xl:w-[40%] 4xl:ml-60 4xl:-bottom-48'
                 src="/resources/images/explorer-packages.png"
                 alt="True Native - Packages"
                 style={{

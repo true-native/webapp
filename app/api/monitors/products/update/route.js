@@ -5,15 +5,23 @@ import { NextResponse } from 'next/server';
 export async function POST(req, res) {
 	let response = null;
 
-    const { status, pid } = await req.json()
+    const { data, pid, type } = await req.json()
 
-    if (!status || !pid) return;
+    if (!data || !pid || !type) return;
 
 	try {
         const updatedProductRef = doc(db, "products", pid)
-		await updateDoc(updatedProductRef, {status: status})
 
-		response = { status: 200, message: 'Status Updated' };
+		switch (type) {
+			case 'status':
+				await updateDoc(updatedProductRef, {status: data})
+				break;
+			case 'new':
+				await updateDoc(updatedProductRef, {new: data})
+				break;
+		}
+
+		response = { status: 200, message: 'Product Updated' };
 	} catch (error) {
 		response = error
 	}

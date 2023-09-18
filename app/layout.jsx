@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
 
     return (
 		<html lang="en" className={poppins.className}>
-			<body>
+			<body className='text-slate-500'>
 				<AuthContextProvider>
 					<QueryClientProvider client={queryClient}>
 						<MainNavigation/>

@@ -68,7 +68,7 @@ const ProductDetailsPage = () => {
                     <h3 className='text-primary-300 text-xl font-semibold pt-5 py-2'>Certifications</h3>
                     <ul className='flex'>
                         {product.certifications.map((cert, idx) => (
-                            <img src={`../../resources/certifications/${cert}.svg`} alt="" key={idx} className='mr-2' />
+                            <img src={`../../resources/certifications/${cert}.svg`} alt="" key={idx} className='max-w-[40px] mr-2' />
                         ))}
                     </ul>
                 </div>

@@ -11,6 +11,26 @@ import ProductCategoryPill from '../../../components/pills/ProductCategoryPill'
 import { useEffect, useState } from "react"
 import { useDebounce } from "use-debounce";
 
+const motionContainer = {
+    hidden: { opacity: 1, scale: 0 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            delayChildren: 0.3,
+            staggerChildren: 0.2
+        }
+    }
+};
+
+const motionItem = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1
+    }
+};
+
 const Products = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false)
 	const [isSelectedCategoriesVisible, setIsSelectedCategoriesVisible] = useState(false)
@@ -64,8 +84,8 @@ const Products = () => {
 		if (debouncedValue) {
 			const products = []
 
-			const searchedProducts = productsListQuery.data.filter((product) => product.name.toLowerCase().includes(debouncedValue) ||
-				product.description.toLowerCase().includes(debouncedValue))
+			const searchedProducts = productsListQuery.data.filter((product) => product.name.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+				product.description.toLowerCase().includes(debouncedValue.toLowerCase()))
 			searchedProducts.forEach(item => products.push(item))
 
 			setFilteredProducts(products)
@@ -120,33 +140,49 @@ const Products = () => {
 
 			{
 				productsListQuery.isLoading ?
-					<div className='my-8 w-11/12 mx-auto gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-						<ProductCardSkeleton />
-						<ProductCardSkeleton />
-						<ProductCardSkeleton />
-						<ProductCardSkeleton />
-						<ProductCardSkeleton className="hidden lg:block" />
-						<ProductCardSkeleton className="hidden lg:block" />
-						<ProductCardSkeleton className="hidden lg:block" />
-						<ProductCardSkeleton className="hidden lg:block" />
-					</div> : null
+				<div className='my-8 w-11/12 mx-auto gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+					<ProductCardSkeleton />
+					<ProductCardSkeleton />
+					<ProductCardSkeleton />
+					<ProductCardSkeleton />
+					<ProductCardSkeleton className="hidden lg:block" />
+					<ProductCardSkeleton className="hidden lg:block" />
+					<ProductCardSkeleton className="hidden lg:block" />
+					<ProductCardSkeleton className="hidden lg:block" />
+				</div>
+				:
+				<motion.ul
+					className='my-8 w-11/12 mx-auto gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+					variants={motionContainer}
+                    initial="hidden"
+                    animate="visible"
+				>
+					{
+						productsListQuery.isError ? <p className="flex items-center justify-center">Could not get products</p> : null
+					}
+					{
+						filteredProducts?.length > 0 ? (
+							filteredProducts.map((product, idx) => (
+								<motion.li key={idx}
+									variants={motionItem}
+									className='relative group p-3 border-2 border-transparent lg:hover:border-gray-100 rounded-3xl shadow-nav shadow-gray-200 bg-white h-fit'
+								>
+									<ProductCard product={product} />
+								</motion.li>
+							))
+						) : (
+							productsListQuery.data?.map((product, idx) => (
+								<motion.li key={idx}
+									variants={motionItem}
+									className='relative group p-3 border-2 border-transparent lg:hover:border-gray-100 rounded-3xl shadow-nav shadow-gray-200 bg-white h-fit'
+								>
+									<ProductCard product={product} />
+								</motion.li>
+							))
+						)
+					}
+				</motion.ul>
 			}
-			<section className='my-8 w-11/12 mx-auto gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-				{
-					productsListQuery.isError ? <p className="flex items-center justify-center">Could not get products</p> : null
-				}
-				{
-					filteredProducts?.length > 0 ? (
-						filteredProducts.map((product, idx) => (
-							<ProductCard product={product} key={idx} />
-						))
-					) : (
-						productsListQuery.data?.map((product, idx) => (
-							<ProductCard product={product} key={idx} />
-						))
-					)
-				}
-			</section>
 		</main>
 	)
 }
