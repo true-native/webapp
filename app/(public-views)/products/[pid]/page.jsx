@@ -2,13 +2,16 @@
 
 import React, { useState } from 'react'
 import londrina from '../../../layout'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { IoChevronForward } from 'react-icons/io5'
 
 const ProductDetailsPage = () => {
+    const router = useRouter();
     const searchParams = useSearchParams()
     const prd = searchParams.get('product')
+
+    if (!prd) router.push('/products')
 
     const [product, setProduct] = useState(JSON.parse(prd))
 

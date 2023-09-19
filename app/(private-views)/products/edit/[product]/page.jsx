@@ -18,6 +18,8 @@ const EditProductPage = () => {
     const searchParams = useSearchParams()
     const prd = searchParams.get('product')
 
+    if (!prd) router.push('/products')
+
     const [product, setProduct] = useState(JSON.parse(prd))
 
     const imageRef = useRef()
