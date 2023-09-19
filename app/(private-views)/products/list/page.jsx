@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { v4 } from 'uuid'
 import DeleteProductModal from '../../../../components/modals/DeleteProductModal'
 import ProductsTableSkeleton from '../../../../components/skeleton/ProductsTableSkeleton'
+import { useRouter } from 'next/navigation'
 
 const ProductsList = () => {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)

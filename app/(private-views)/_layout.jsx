@@ -11,6 +11,7 @@ export default function PrivateLayout({children}) {
     useEffect(() => {
         if (!user) {
             setUser(null)
+            router.push('/admin')
             return;
         }
     },[router, user])

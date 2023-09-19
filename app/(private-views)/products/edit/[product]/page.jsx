@@ -11,6 +11,7 @@ import { notify, notifyLoading } from '../../../../../utils/notify'
 import RectButton from '../../../../../components/buttons/RectButton'
 import ProductCategoryPill from '../../../../../components/pills/ProductCategoryPill'
 import PrivateLayout from '../../../_layout'
+import { useQuery } from '@tanstack/react-query'
 
 const EditProductPage = () => {
     const router = useRouter()
@@ -21,9 +22,9 @@ const EditProductPage = () => {
 
     const imageRef = useRef()
     const imageInputRef = useRef()
-
     const ingredientInputRef = useRef()
     const sizeInputRef = useRef()
+    const SKURef = useRef()
 
     const [isTakePhotoButtonDisabled, setIsTakePhotoButtonDisabled] = useState(true)
     const [isSaveEditProductButtonDisabled, setIsSaveEditProductButtonDisabled] = useState(false)
@@ -45,6 +46,16 @@ const EditProductPage = () => {
     const [singleSize, setSingleSize] = useState('')
 
     const [productImage, setProductImage] = useState()
+
+    const productsSKUsQuery = useQuery({
+        queryKey: ['sku-products'],
+        queryFn: async () => await axios.post('/api/monitors/products/list').then((res) => res.data),
+    })
+
+    const handleCheckForExistingSKU = () => {
+        const sku = productsSKUsQuery.data?.find(product => product.sku === productSku)
+        return !sku ? false : true
+    }
 
     useEffect(() => {
         if (product.image_full) imageRef.current.src = product.image_full
@@ -157,6 +168,16 @@ const EditProductPage = () => {
         e.preventDefault()
         const toastId = notifyLoading('Saving Changes...')
 
+        if (handleCheckForExistingSKU()) {
+            notify('error', 'SKU already exists!', null, null, toastId)
+            SKURef.current.focus()
+            setProductSku('')
+            setIsSaveEditProductButtonDisabled(true)
+            return
+        }
+
+        if (handleGetInputValuesEmpty()) return
+
         if (!product.image_full) {
             let isPhotoUploadedSuccess = await handleSubmitPhoto()
             if (!isPhotoUploadedSuccess || isPhotoUploadedSuccess === null) return
@@ -212,7 +233,7 @@ const EditProductPage = () => {
 
                             <div className="xl:flex xl:flex-col">
                                 <label htmlFor="product-sku" className='text-primary-400 font-bold mb-2'>Product SKU</label>
-                                <input type="text" className='w-full h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='product-sku' aria-label='Product SKU'
+                                <input type="text" ref={SKURef} className='w-full h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='product-sku' aria-label='Product SKU'
                                     value={productSku} onChange={(e) => {setProductSku(e.target.value); handleToggleCreateProductButton()}} placeholder='Type in the product Stock Keeping Unit'
                                 />
                             </div>
@@ -367,8 +388,7 @@ const EditProductPage = () => {
                                     <div htmlFor="usda-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2 mt-3">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                                 checked={productCertifications.includes("certification-usda")}
                                             type="checkbox" value="certification-usda" id="usda-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
@@ -380,8 +400,7 @@ const EditProductPage = () => {
                                     <div htmlFor="organic-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                                 checked={productCertifications.includes("certification-organic")}
                                             type="checkbox" value="certification-organic" id="organic-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
@@ -393,8 +412,7 @@ const EditProductPage = () => {
                                     <div htmlFor="vegan-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                                 checked={productCertifications.includes("certification-vegan")}
                                             type="checkbox" value="certification-vegan" id="vegan-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
@@ -406,8 +424,7 @@ const EditProductPage = () => {
                                     <div htmlFor="kosher-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                                 checked={productCertifications.includes("certification-kosher")}
                                             type="checkbox" value="certification-kosher" id="kosher-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
@@ -419,8 +436,7 @@ const EditProductPage = () => {
                                     <div htmlFor="non_gmo-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                                 checked={productCertifications.includes("certification-non_gmo")}
                                             type="checkbox" value="certification-non_gmo" id="non_gmo-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
@@ -432,8 +448,7 @@ const EditProductPage = () => {
                                     <div htmlFor="gluten_free-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                                 checked={productCertifications.includes("certification-gluten_free")}
                                             type="checkbox" value="certification-gluten_free" id="gluten_free-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
@@ -445,8 +460,7 @@ const EditProductPage = () => {
                                     <div htmlFor="natural-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-8">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                                 checked={productCertifications.includes("certification-natural")}
                                             type="checkbox" value="certification-natural" id="natural-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>

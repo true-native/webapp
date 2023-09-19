@@ -1,11 +1,9 @@
 "use client"
 
-import React, { useEffect, useState, useRef } from 'react'
-import { IoAddCircle, IoCamera, IoClose, IoCloseCircle } from 'react-icons/io5'
-import { useRouter } from 'next/navigation'
+import React, { useState, useRef } from 'react'
+import { IoAddCircle, IoCamera, IoCloseCircle } from 'react-icons/io5'
 import { v4 } from 'uuid'
 import axios from 'axios'
-import { useAuth } from '../../../../contexts/AuthContext'
 import { storage } from '../../../../config/firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { notify, notifyLoading } from '../../../../utils/notify'
@@ -15,9 +13,6 @@ import PrivateLayout from '../../../(private-views)/_layout'
 import { useQuery } from '@tanstack/react-query'
 
 const AddProductPage = () => {
-    const { user } = useAuth()
-    const router = useRouter()
-
     const imageRef = useRef()
     const imageInputRef = useRef()
     const ingredientInputRef = useRef()
@@ -44,10 +39,6 @@ const AddProductPage = () => {
     const [singleSize, setSingleSize] = useState('')
 
     const [productImage, setProductImage] = useState(null)
-
-    useEffect(() => {
-        if (!user) router.push('/')
-    }, [router, user])
 
     const productsSKUsQuery = useQuery({
         queryKey: ['sku-products'],
