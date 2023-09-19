@@ -48,8 +48,8 @@ const ProductDetailsPage = () => {
                         </ul>
                     </div>
                 </div>
-                <div className='lg:order-1 lg:w-6/12 xl:w-5/12 3xl:w-4/12 lg:mt-5'>
-                    <img src={`${product.image_full}`} alt=""/>
+                <div className='lg:order-1 lg:w-6/12 xl:w-5/12 3xl:w-4/12 lg:mt-5 h-[450px] md:h-[600px] lg:h-[500px] xl:h-[600px] 4xl:h-[780px]'>
+                    <img src={`${product.image_full}`} alt="" className='h-full w-full object-cover'/>
                 </div>
                 <div className="p-5 md:p-10 mb-10 lg:hidden">
                     <p className='py-3 text-slate-500'>{product.description}</p>

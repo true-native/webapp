@@ -43,7 +43,7 @@ const DeleteProductModal = ({isDeleteDialogOpen, closeModal, product, handleDele
                                 <hr className='my-4'/>
                                 <div className="mt-2">
                                     <div className='flex items-center gap-3'>
-                                        <img src={product.image_full} alt="" className='w-[80px] h-[80px] rounded-lg'/>
+                                        <img src={product.image_full} alt="" className='w-[80px] h-[80px] rounded-lg object-cover'/>
                                         <div className='flex flex-col'>
                                             <small className='text-primary-200'>{product.sub}</small>
                                             <h2 className='font-semibold text-slate-500 leading-4'>{product.name}</h2>

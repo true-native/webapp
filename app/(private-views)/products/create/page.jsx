@@ -12,6 +12,7 @@ import { notify, notifyLoading } from '../../../../utils/notify'
 import RectButton from '../../../../components/buttons/RectButton'
 import ProductCategoryPill from '../../../../components/pills/ProductCategoryPill'
 import PrivateLayout from '../../../(private-views)/_layout'
+import { useQuery } from '@tanstack/react-query'
 
 const AddProductPage = () => {
     const { user } = useAuth()
@@ -21,6 +22,7 @@ const AddProductPage = () => {
     const imageInputRef = useRef()
     const ingredientInputRef = useRef()
     const sizeInputRef = useRef()
+    const SKURef = useRef()
 
     const [isTakePhotoButtonDisabled, setIsTakePhotoButtonDisabled] = useState(false)
     const [isCreateProductButtonDisabled, setIsCreateProductButtonDisabled] = useState(true)
@@ -46,6 +48,16 @@ const AddProductPage = () => {
     useEffect(() => {
         if (!user) router.push('/')
     }, [router, user])
+
+    const productsSKUsQuery = useQuery({
+        queryKey: ['sku-products'],
+        queryFn: async () => await axios.post('/api/monitors/products/list').then((res) => res.data),
+    })
+
+    const handleCheckForExistingSKU = () => {
+        const sku = productsSKUsQuery.data?.find(product => product.sku === productSku)
+        return !sku ? false : true
+    }
 
     const handleResetStates = () => {
         setIsTakePhotoButtonDisabled(false)
@@ -154,6 +166,16 @@ const AddProductPage = () => {
         e.preventDefault()
         const toastId = notifyLoading('Creating New Product...')
 
+        if (handleCheckForExistingSKU()) {
+            notify('error', 'SKU already exists!', null, null, toastId)
+            SKURef.current.focus()
+            setProductSku('')
+            setIsCreateProductButtonDisabled(true)
+            return
+        }
+
+        if (handleGetInputValuesEmpty()) return
+
         let isPhotoUploadedSuccess = await handleSubmitPhoto()
         if (!isPhotoUploadedSuccess || isPhotoUploadedSuccess === null) return
 
@@ -202,7 +224,7 @@ const AddProductPage = () => {
 
                             <div className="xl:flex xl:flex-col">
                                 <label htmlFor="product-sku" className='text-primary-400 font-bold mb-2'>Product SKU</label>
-                                <input type="text" className='w-full h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='product-sku' aria-label='Product SKU'
+                                <input type="text" ref={SKURef} className='w-full h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='product-sku' aria-label='Product SKU'
                                     value={productSku} onChange={(e) => {setProductSku(e.target.value); handleToggleCreateProductButton()}} placeholder='Type in the product Stock Keeping Unit'
                                 />
                             </div>
@@ -236,14 +258,14 @@ const AddProductPage = () => {
                                 ></textarea>
                             </div>
 
-                            <div className="flex items-center justify-between">
-                                <div className="flex flex-col w-9/12">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                                <div className="flex flex-col w-full md:w-9/12">
                                     <label htmlFor="add-ingredient" className='text-primary-400 font-bold mb-2'>Add Ingredients</label>
                                     <input type="text" ref={ingredientInputRef} className='h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='add-ingredient' aria-label='Card Text'
                                         onChange={(e) => setSingleIngredient(e.target.value)} placeholder='Type in one ingredient and add to the list'
                                     />
                                 </div>
-                                <div className="mt-4">
+                                <div className="mb-4 md:mb-0 md:mt-4 ml-auto">
                                     <RectButton text='Add to list' variant='info' onClick={(e) => handleAddIngredient(e)} disabled={!singleIngredient}/>
                                 </div>
                             </div>
@@ -263,14 +285,14 @@ const AddProductPage = () => {
                                 ) : ''
                             }
 
-                            <div className="flex items-center justify-between">
-                                <div className="flex flex-col w-9/12">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                                <div className="flex flex-col w-full md:w-9/12">
                                     <label htmlFor="add-size" className='text-primary-400 font-bold mb-2'>Add Available Sizes</label>
                                     <input type="text" ref={sizeInputRef} className='h-[55px] border-2 border-gray-200 mb-4 px-4 rounded-md' name='add-size' aria-label='Card Text'
                                         onChange={(e) => setSingleSize(e.currentTarget.value)} placeholder='Type in one size and add to the list'
                                     />
                                 </div>
-                                <div className="mt-4">
+                                <div className="mb-4 md:mb-0 md:mt-4 ml-auto">
                                     <RectButton text='Add to list' variant='info' onClick={(e) => handleAddSize(e)} disabled={!singleSize}/>
                                 </div>
                             </div>
@@ -357,8 +379,7 @@ const AddProductPage = () => {
                                     <div htmlFor="usda-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2 mt-3">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                             type="checkbox" value="certification-usda" id="usda-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
                                         <div className='flex flex-col py-3 ml-4'>
@@ -369,8 +390,7 @@ const AddProductPage = () => {
                                     <div htmlFor="organic-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                             type="checkbox" value="certification-organic" id="organic-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
                                         <div className='flex flex-col py-3 ml-4'>
@@ -381,8 +401,7 @@ const AddProductPage = () => {
                                     <div htmlFor="vegan-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                             type="checkbox" value="certification-vegan" id="vegan-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
                                         <div className='flex flex-col py-3 ml-4'>
@@ -393,8 +412,7 @@ const AddProductPage = () => {
                                     <div htmlFor="kosher-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                             type="checkbox" value="certification-kosher" id="kosher-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
                                         <div className='flex flex-col py-3 ml-4'>
@@ -405,8 +423,7 @@ const AddProductPage = () => {
                                     <div htmlFor="non_gmo-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                             type="checkbox" value="certification-non_gmo" id="non_gmo-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
                                         <div className='flex flex-col py-3 ml-4'>
@@ -417,8 +434,7 @@ const AddProductPage = () => {
                                     <div htmlFor="gluten_free-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-2">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                             type="checkbox" value="certification-gluten_free" id="gluten_free-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
                                         <div className='flex flex-col py-3 ml-4'>
@@ -429,8 +445,7 @@ const AddProductPage = () => {
                                     <div htmlFor="natural-checkbox" className="flex items-center pl-4 border-2 border-gray-200 rounded-md mb-8">
                                         <input
                                             onChange={(e) => {
-                                                e.target.checked ? handleManipulateCertificationsArray(e.target.value, true) :
-                                                handleManipulateCertificationsArray(e.target.value, false)
+                                                handleManipulateCertificationsArray(e.target.value, e.target.checked ? true : false)
                                                 handleToggleCreateProductButton()}}
                                             type="checkbox" value="certification-natural" id="natural-checkbox" name="certification-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
                                         <div className='flex flex-col py-3 ml-4'>
@@ -503,7 +518,9 @@ const AddProductPage = () => {
                                 </RectButton>
                             </div>
 
-                            <RectButton text="Create Product" variant='secondary' disabled={isCreateProductButtonDisabled} full iconRight={<IoAddCircle className='text-xl'/>} onClick={(e) => handleCreateProduct(e)}/>
+                            <div className='hidden xl:block'>
+                                <RectButton text="Create Product" variant='secondary' disabled={isCreateProductButtonDisabled} full iconRight={<IoAddCircle className='text-xl'/>} onClick={(e) => handleCreateProduct(e)}/>
+                            </div>
                         </div>
 
                         <div className='w-12/12 xl:w-5/12 sticky top-36 right-0'>
@@ -516,6 +533,10 @@ const AddProductPage = () => {
                                 )}
                                 <img src="" alt="" ref={imageRef} className='flex mx-auto object-cover w-full outline-none ring-0'/>
                             </div>
+                        </div>
+
+                        <div className='xl:hidden mt-4'>
+                            <RectButton text="Create Product" variant='secondary' disabled={isCreateProductButtonDisabled} full iconRight={<IoAddCircle className='text-xl'/>} onClick={(e) => handleCreateProduct(e)}/>
                         </div>
                     </div>
                 </form>

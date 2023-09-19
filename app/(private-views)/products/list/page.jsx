@@ -87,11 +87,13 @@ const ProductsList = () => {
     }
 
     const renderProductImage = (info) => {
+        const [amplifiedImageClasses, setAmplifiedImageClasses] = useState('')
         return (
             <div className='flex justify-center'>
                 <img
                     src={info.getValue()} alt=""
-                    className='h-[30px] w-[30px] rounded-full border border-slate-400 shadow-xl cursor-pointer hover:w-[400px] hover:h-[400px] hover:absolute hover:left-10 hover:top-10 hover:z-50 hover:rounded-lg'
+                    className={`h-[30px] w-[30px] object-cover rounded-full border border-slate-300 shadow-xl cursor-pointer ${amplifiedImageClasses}`}
+                    onClick={() => amplifiedImageClasses === '' ? setAmplifiedImageClasses('w-[400px] h-[400px] absolute left-10 top-10 z-50 rounded-lg') : setAmplifiedImageClasses('')}
                 />
             </div>
         )

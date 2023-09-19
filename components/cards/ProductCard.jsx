@@ -14,16 +14,16 @@ const ProductCard = ({product}) => {
                     </span>
                 )
             }
-            <div className='overflow-clip rounded-2xl relative'>
+            <div className='overflow-clip rounded-2xl relative h-[350px] lg:h-[290px] xl:h-[250px] 2xl:h-[310px] 3xl:h-[350px] 4xl:h-[400px]'>
                 <img
-                    className='object-cover rounded-2xl w-full h-auto lg:group-hover:rotate-6 lg:group-hover:transition-all lg:group-hover:scale-150 lg:group-hover:ease-in-out lg:group-hover:delay-200'
+                    className='object-cover rounded-2xl w-full h-full lg:group-hover:rotate-6 lg:group-hover:transition-all lg:group-hover:scale-150 lg:group-hover:ease-in-out lg:group-hover:delay-200'
                     src={product.image_full}
                     alt={product.name}
                 />
             </div>
             <div className='px-2 pt-4 pb-2 text-left'>
                 <h3 className='font-semibold text-xl mt-2 mb-1 text-primary-400'>{product.name}</h3>
-                <p className='text-slate-500 text-base line-clamp-2'>
+                <p className='text-slate-500 text-base line-clamp-2 h-[50px]'>
                     {product.card_text}
                 </p>
                 <span className='text-secondary-500 font-semibold flex items-center pt-6'>
