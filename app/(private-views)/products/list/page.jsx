@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PrivateLayout from '../../../(private-views)/_layout'
 
 import {
@@ -10,10 +10,21 @@ import {
     getFilteredRowModel,
     getPaginationRowModel,
     useReactTable,
+    getSortedRowModel,
+    Column,
+    Table,
+    ColumnFiltersState,
+    getFacetedRowModel,
+    getFacetedUniqueValues,
+    getFacetedMinMaxValues,
+    sortingFns,
+    FilterFn,
+    SortingFn,
+    ColumnDef,
+    FilterFns,
 } from '@tanstack/react-table'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '../../../../contexts/AuthContext'
-import { HiSortAscending } from 'react-icons/hi'
+import { HiSortAscending, HiSortDescending } from 'react-icons/hi'
 import axios from 'axios'
 import { IoOpenOutline, IoPencil, IoSearch, IoToggle, IoTrash } from 'react-icons/io5'
 import { notify, notifyLoading } from '../../../../utils/notify'
@@ -21,11 +32,11 @@ import Link from 'next/link'
 import { v4 } from 'uuid'
 import DeleteProductModal from '../../../../components/modals/DeleteProductModal'
 import ProductsTableSkeleton from '../../../../components/skeleton/ProductsTableSkeleton'
-import { useRouter } from 'next/navigation'
 
 const ProductsList = () => {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
     const [productToBeDeleted, setProductToBeDeleted] = useState({})
+    const [sorting, setSorting] = useState([])
 
     const handleCloseDeleteProductModal = () => {
         setIsDeleteDialogOpen(false)
@@ -229,6 +240,7 @@ const ProductsList = () => {
         columnHelper.accessor('image_full', {
             header: () => <div className='text-center'>Image</div>,
             cell: info => renderProductImage(info),
+            enableSorting: false,
         }),
         columnHelper.accessor('sku', {
             cell: info => <div className='whitespace-nowrap'>{info.getValue()}</div>,
@@ -238,35 +250,34 @@ const ProductsList = () => {
             id: 'name',
             header: () => <div className="flex items-center justify-between">
                 Name
-                <HiSortAscending className='text-slate-400 dark:text-slate-400 ml-2'/>
             </div>,
             cell: info => renderProductName(info),
         }),
         columnHelper.accessor('category', {
             header: () => <div className="flex items-center justify-between">
                 Category
-                <HiSortAscending className='text-slate-400 dark:text-slate-400 ml-2'/>
             </div>,
             cell: info => renderProductCategory(info),
         }),
         columnHelper.accessor(row => row, {
             id: 'new',
+            enableSorting: false,
             cell: info => <div className='flex justify-center whitespace-nowrap'>{renderProductNew(info)}</div>,
             header: () => <div className="flex items-center justify-between">
                 New Product Flag
-                <HiSortAscending className='text-slate-400 dark:text-slate-400 ml-2'/>
             </div>,
         }),
         columnHelper.accessor(row => row, {
             id: 'status',
+            enableSorting: false,
             header: () => <div className="flex items-center justify-between">
                 Product Status
-                <HiSortAscending className='text-slate-400 dark:text-slate-400 ml-2'/>
             </div>,
             cell: info => renderProductStatus(info),
         }),
         columnHelper.accessor(row => row, {
             id: 'product_page',
+            enableSorting: false,
             header: () => <div className="flex items-center justify-center">
                 Product Page
             </div>,
@@ -274,6 +285,7 @@ const ProductsList = () => {
         }),
         columnHelper.accessor(row => row, {
             id: 'actions',
+            enableSorting: false,
             header: () => <div className='text-center'>Actions</div>,
             cell: info => <div className='flex items-center justify-center gap-2 whitespace-nowrap'>{renderMonitorActions(info)}</div>
         }),
@@ -289,7 +301,14 @@ const ProductsList = () => {
 			pagination: {
 				pageSize: 20,
 			},
-		}
+		},
+        state: {
+            sorting,
+        },
+        onSortingChange: setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        debugTable: true,
     })
 
     return (
@@ -330,13 +349,31 @@ const ProductsList = () => {
                                         {table?.getHeaderGroups()?.map(headerGroup => (
                                         <tr key={headerGroup.id}>
                                             {headerGroup.headers.map(header => (
-                                                <th key={header.id} scope='col' className='px-6 py-3 font-semibold whitespace-nowrap'>
-                                                    {header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
-                                                    )}
+                                                <th key={header.id} scope='col' className='px-6 py-3 font-semibold whitespace-nowrap' onClick={header.column.getToggleSortingHandler()}>
+                                                    {
+                                                        header.isPlaceholder
+                                                        ? null
+                                                        : (
+                                                            <div
+                                                                {...{
+                                                                    className: header.column.getCanSort()
+                                                                    ? 'cursor-pointer select-none flex items-center justify-between'
+                                                                    : '',
+                                                                    onClick: header.column.getToggleSortingHandler(),
+                                                                }}
+                                                            >
+                                                                {   flexRender(
+                                                                        header.column.columnDef.header,
+                                                                        header.getContext()
+                                                                    )}
+                                                                    {{
+                                                                        asc: <HiSortAscending className='text-slate-400 dark:text-slate-400 ml-2'/>,
+                                                                        desc: <HiSortDescending className='text-slate-400 dark:text-slate-400 ml-2'/>,
+                                                                    }[header.column.getIsSorted()] ?? null
+                                                                }
+                                                            </div>
+                                                        )
+                                                    }
                                                 </th>
                                             ))}
                                         </tr>
@@ -344,7 +381,7 @@ const ProductsList = () => {
                                     </thead>
                                     <tbody>
                                         {table?.getRowModel().rows.map(row => (
-                                            <tr key={row.id} className='bg-white border-b last-of-type:border-b-0'>
+                                            <tr key={row.id} className='bg-white border-b last-of-type:border-b-0 hover:bg-slate-100'>
                                                 {row.getVisibleCells().map(cell => (
                                                     <td key={cell.id} className='px-6 py-2 border-r last-of-type:border-r-0'>
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

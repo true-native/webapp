@@ -5,6 +5,7 @@ import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndP
 import { collection, addDoc, setDoc, doc, getDoc, getDocs, where, query } from 'firebase/firestore'
 import { auth, db } from "../config/firebase";
 import { useRouter } from "next/navigation";
+import Loader from '../components/loaders/Loader'
 
 const AuthContext = createContext({})
 
@@ -110,7 +111,7 @@ export const AuthContextProvider = ({children}) => {
 
     return (
         <AuthContext.Provider value={{user, setUser, login, signUp, logout, isLoading, setIsLoading}}>
-            {isLoading ? <p>Loading</p> : children}
+            {isLoading ? <Loader/> : children}
         </AuthContext.Provider>
     )
 }
