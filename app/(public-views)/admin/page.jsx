@@ -7,10 +7,6 @@ import React, { useEffect, useState } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import { notify, notifyLoading } from '../../../utils/notify'
 
-export const metadata = {
-	title: 'True Native - Login',
-    description: 'Destined for Administrators Only.'
-}
 
 const AdminPage = () => {
     const { login, user, setUser } = useAuth()

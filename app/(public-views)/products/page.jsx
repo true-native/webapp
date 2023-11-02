@@ -31,10 +31,6 @@ const motionItem = {
     }
 };
 
-export const metadata = {
-	title: 'True Native - Products',
-	description: 'We offer a wide variety of quality super-foods such as: Pitaya, Açaí, Granola, IQF Fruits, and much more.'
-}
 
 const Products = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false)
