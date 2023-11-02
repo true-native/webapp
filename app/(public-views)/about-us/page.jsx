@@ -4,11 +4,6 @@ import { Londrina_Solid } from 'next/font/google'
 
 const londrina = Londrina_Solid({ subsets: ['latin'], weight: '400', })
 
-export const metadata = {
-	title: 'True Native - About',
-	description: 'Learn more about one of the best super-foods brands on the market.'
-}
-
 const AboutPage = () => {
     return (
 		<main className="lg:pt-2">

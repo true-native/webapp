@@ -1,10 +1,5 @@
 import React from 'react'
 
-export const metadata = {
-	title: 'True Native - Terms and Conditions',
-    description: 'Terms and Conditions page for True Native Foods.'
-}
-
 const TermsPage = () => {
 	return (
 		<main className='w-9/12 py-8 4xl:w-8/12 mx-auto 3xl:py-12'>
