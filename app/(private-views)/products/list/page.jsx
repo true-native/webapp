@@ -10,18 +10,7 @@ import {
     getFilteredRowModel,
     getPaginationRowModel,
     useReactTable,
-    getSortedRowModel,
-    Column,
-    Table,
-    ColumnFiltersState,
-    getFacetedRowModel,
-    getFacetedUniqueValues,
-    getFacetedMinMaxValues,
-    sortingFns,
-    FilterFn,
-    SortingFn,
-    ColumnDef,
-    FilterFns,
+    getSortedRowModel
 } from '@tanstack/react-table'
 import { useQuery } from '@tanstack/react-query'
 import { HiSortAscending, HiSortDescending } from 'react-icons/hi'
@@ -37,6 +26,7 @@ const ProductsList = () => {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
     const [productToBeDeleted, setProductToBeDeleted] = useState({})
     const [sorting, setSorting] = useState([])
+    const [searchValue, setSearchValue] = useState('')
 
     const handleCloseDeleteProductModal = () => {
         setIsDeleteDialogOpen(false)
@@ -114,7 +104,7 @@ const ProductsList = () => {
     const renderProductName = (info) => {
         return (
             <div className='flex flex-col whitespace-nowrap'>
-                <small className='text-primary-200 text-xs'>{info.getValue().sub}</small>
+                <small aria-hidden="true" className='text-primary-200 text-xs'>{info.getValue().sub}</small>
                 <p className='font-semibold'>{info.getValue().name}</p>
             </div>
         )
@@ -241,6 +231,7 @@ const ProductsList = () => {
             header: () => <div className='text-center'>Image</div>,
             cell: info => renderProductImage(info),
             enableSorting: false,
+            enableColumnFilter: false
         }),
         columnHelper.accessor('sku', {
             cell: info => <div className='whitespace-nowrap'>{info.getValue()}</div>,
@@ -251,7 +242,7 @@ const ProductsList = () => {
             header: () => <div className="flex items-center justify-between">
                 Name
             </div>,
-            cell: info => renderProductName(info),
+            cell: info => renderProductName(info)
         }),
         columnHelper.accessor('category', {
             header: () => <div className="flex items-center justify-between">
@@ -262,22 +253,25 @@ const ProductsList = () => {
         columnHelper.accessor(row => row, {
             id: 'new',
             enableSorting: false,
+            enableColumnFilter: false,
             cell: info => <div className='flex justify-center whitespace-nowrap'>{renderProductNew(info)}</div>,
             header: () => <div className="flex items-center justify-between">
                 New Product Flag
-            </div>,
+            </div>
         }),
         columnHelper.accessor(row => row, {
             id: 'status',
             enableSorting: false,
+            enableColumnFilter: false,
             header: () => <div className="flex items-center justify-between">
                 Product Status
             </div>,
-            cell: info => renderProductStatus(info),
+            cell: info => renderProductStatus(info)
         }),
         columnHelper.accessor(row => row, {
             id: 'product_page',
             enableSorting: false,
+            enableColumnFilter: false,
             header: () => <div className="flex items-center justify-center">
                 Product Page
             </div>,
@@ -286,6 +280,7 @@ const ProductsList = () => {
         columnHelper.accessor(row => row, {
             id: 'actions',
             enableSorting: false,
+            enableColumnFilter: false,
             header: () => <div className='text-center'>Actions</div>,
             cell: info => <div className='flex items-center justify-center gap-2 whitespace-nowrap'>{renderMonitorActions(info)}</div>
         }),
@@ -295,7 +290,6 @@ const ProductsList = () => {
         data: productsListQuery.data,
         columns,
 		getCoreRowModel: getCoreRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
     	getPaginationRowModel: getPaginationRowModel(),
 		initialState: {
 			pagination: {
@@ -304,11 +298,15 @@ const ProductsList = () => {
 		},
         state: {
             sorting,
+            globalFilter: searchValue
         },
         onSortingChange: setSorting,
+        onGlobalFilterChange: setSearchValue,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
         debugTable: true,
+        enableSortingRemoval: false,
     })
 
     return (
@@ -332,8 +330,8 @@ const ProductsList = () => {
                                 <div className="flex items-center mt-6 w-full lg:w-fit xl:mt-0">
                                     <div className="relative w-full">
                                         <input
-                                            // onChange={handleInputChange}
-                                            // value={searchInputValue}
+                                            value={searchValue || ''}
+                                            onChange={(e) => setSearchValue(e.target.value)}
                                             type="text"
                                             aria-label="search"
                                             placeholder="Search product"
@@ -349,7 +347,7 @@ const ProductsList = () => {
                                         {table?.getHeaderGroups()?.map(headerGroup => (
                                         <tr key={headerGroup.id}>
                                             {headerGroup.headers.map(header => (
-                                                <th key={header.id} scope='col' className='px-6 py-3 font-semibold whitespace-nowrap' onClick={header.column.getToggleSortingHandler()}>
+                                                <th key={header.id} scope='col' className='px-6 py-3 font-semibold whitespace-nowrap'>
                                                     {
                                                         header.isPlaceholder
                                                         ? null

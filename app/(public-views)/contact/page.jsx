@@ -6,6 +6,11 @@ import ContactForm from '../../../components/forms/ContactForm'
 
 const londrina = Londrina_Solid({ subsets: ['latin'], weight: '400', })
 
+export const metadata = {
+	title: 'True Native - Contact',
+	description: 'GEt in touch with us to get more information or make inquiries.'
+}
+
 const ContactPage = () => {
     return (
 		<main className='lg:pt-2'>

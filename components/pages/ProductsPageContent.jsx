@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { IoOptionsOutline, IoSearch } from "react-icons/io5"
-import ProductsFilter from "../../../components/filters/ProductsFilter"
-import ProductCard from "../../../components/cards/ProductCard"
-import ProductCardSkeleton from '../../../components/skeleton/ProductCardSkeleton'
-import ProductCategoryPill from '../../../components/pills/ProductCategoryPill'
+import ProductsFilter from "../filters/ProductsFilter"
+import ProductCard from "../cards/ProductCard"
+import ProductCardSkeleton from '../skeleton/ProductCardSkeleton'
+import ProductCategoryPill from '../pills/ProductCategoryPill'
 import { useEffect, useState } from "react"
 import { useDebounce } from "use-debounce";
 
@@ -31,12 +31,7 @@ const motionItem = {
     }
 };
 
-export const metadata = {
-	title: 'True Native - Products',
-	description: 'We offer a wide variety of quality super-foods such as: Pitaya, Açaí, Granola, IQF Fruits, and much more.'
-}
-
-const Products = () => {
+const ProductsPageContent = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false)
 	const [isSelectedCategoriesVisible, setIsSelectedCategoriesVisible] = useState(false)
 	const [selectedCategories, setSelectedCategories] = useState([])
@@ -192,5 +187,4 @@ const Products = () => {
 	)
 }
 
-
-export default Products;
+export default ProductsPageContent
