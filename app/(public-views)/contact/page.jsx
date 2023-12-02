@@ -51,7 +51,7 @@ const ContactPage = () => {
 					<div className='w-full h-[400px] md:h-[300px] lg:w-11/12 lg:h-[280px] 2xl:h-[300px] 2xl:w-10/12 my-8 rounded-2xl overflow-clip lg:shadow-2xl outline outline-slate-300'>
 						<iframe
 							title='True Native Map'
-							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d136188.7943540614!2d-80.16726275164365!3d26.236632429530054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d902d941884489%3A0x3b611c5e76ae74f3!2sPompano%20Beach%2C%20FL!5e0!3m2!1sen!2sus!4v1693594902878!5m2!1sen!2sus"
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28650.53368811122!2d-80.3507390246456!3d26.153813056670412!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d908e1ef9f6801%3A0x9c5542cfdb8d1981!2sFort%20Lauderdale%2C%20FL%2033323!5e0!3m2!1sen!2sus!4v1701484652128!5m2!1sen!2sus"
 							width="100%" height="100%"
 							allowFullScreen="" loading="lazy"
 							referrerPolicy="no-referrer-when-downgrade"

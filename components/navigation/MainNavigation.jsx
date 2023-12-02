@@ -116,7 +116,7 @@ const MainNavigation = () => {
 										<span className='ml-2'>800 968 9467</span>
 									</div>
 									<small className='text-slate-400'>
-										1870 NW 21st St - Pompano Beach, FL
+										P.O Box 450369 - Fort Lauderdale, FL - 33323
 									</small>
 								</div>
 								<div className='flex items-center text-primary-500'>
