@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { IoArrowForward } from 'react-icons/io5'
+import Image from 'next/image'
 
 const ProductCard = ({product}) => {
     return (
@@ -21,8 +22,18 @@ const ProductCard = ({product}) => {
                     alt={product.name}
                 />
             </div>
+            {
+                product.sub.toLowerCase() === "organic" ? (
+                    <div className="relative">
+                        <div className='absolute right-3 -top-7'>
+                            <Image src='./resources/quality/usda-seal.svg' width={55} height={55} alt="Organic Product"/>
+                        </div>
+                    </div>
+                ) : null
+            }
             <div className='px-2 pt-4 pb-2 text-left'>
-                <h3 className='font-semibold text-xl mt-2 mb-1 text-primary-400'>{product.name}</h3>
+                <p className='text-primary-200 leading-3 font-semibold text-sm'>{product.sub}</p>
+                <h3 className='font-semibold text-xl mt-1 mb-2 text-primary-400'>{product.name}</h3>
                 <p className='text-slate-500 text-base line-clamp-2 h-[50px]'>
                     {product.card_text}
                 </p>

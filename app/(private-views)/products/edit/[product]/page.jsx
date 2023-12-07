@@ -11,7 +11,6 @@ import { notify, notifyLoading } from '../../../../../utils/notify'
 import RectButton from '../../../../../components/buttons/RectButton'
 import ProductCategoryPill from '../../../../../components/pills/ProductCategoryPill'
 import PrivateLayout from '../../../_layout'
-import { useQuery } from '@tanstack/react-query'
 import ProductCategorySelection from '../../../../../components/sections/product/product-categories/ProductCategorySelection'
 import ProductsCertificationsSelection from '../../../../../components/sections/product/product-certifications/ProductCertificationsSelection'
 
@@ -50,16 +49,6 @@ const EditProductPage = () => {
     const [singleSize, setSingleSize] = useState('')
 
     const [productImage, setProductImage] = useState()
-
-    const productsSKUsQuery = useQuery({
-        queryKey: ['sku-products'],
-        queryFn: async () => await axios.post('/api/monitors/products/list').then((res) => res.data),
-    })
-
-    const handleCheckForExistingSKU = () => {
-        const sku = productsSKUsQuery.data?.find(product => product.sku === productSku)
-        return !sku ? false : true
-    }
 
     useEffect(() => {
         if (product.image_full) imageRef.current.src = product.image_full
@@ -324,6 +313,7 @@ const EditProductPage = () => {
                             />
 
                             <ProductsCertificationsSelection
+                                productCertifications={productCertifications}
                                 handleManipulateCertificationsArray={handleManipulateCertificationsArray}
                                 handleToggleCreateProductButton={handleToggleCreateProductButton}
                             />

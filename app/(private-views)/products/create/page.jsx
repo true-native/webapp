@@ -312,6 +312,7 @@ const AddProductPage = () => {
                             />
 
                             <ProductsCertificationsSelection
+                                productCertifications={productCertifications}
                                 handleManipulateCertificationsArray={handleManipulateCertificationsArray}
                                 handleToggleCreateProductButton={handleToggleCreateProductButton}
                             />

@@ -305,7 +305,6 @@ const ProductsList = () => {
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        debugTable: true,
         enableSortingRemoval: false,
     })
 
