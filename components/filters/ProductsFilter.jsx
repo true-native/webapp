@@ -51,6 +51,12 @@ const ProductsFilter = ({isFilterOpen, setIsFilterOpen, applyFilter, handleManip
 						type="checkbox" id="category-conventional-iqf" name="category-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
 					<label htmlFor="category-conventional-iqf" className="w-full text-primary-400 text-base ml-2">Conventional IQF Fruits</label>
 				</div>
+				<div className="flex items-center my-6">
+					<input
+						onChange={(e) => {handleManipulateCategoriesArray({id: "coconut", description: "Coconut"}, e.target.checked ? true : false)}}
+						type="checkbox" id="coconut" name="category-product-checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus-visible:outline-none focus-visible:border-none"/>
+					<label htmlFor="coconut" className="w-full text-primary-400 text-base ml-2">Coconut</label>
+				</div>
 			</div>
 			<hr className="my-4 bg-slate-400"/>
 			<RectButton full text='Apply filters' variant='secondary' onClick={(e) => applyFilter(e)}/>

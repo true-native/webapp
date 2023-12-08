@@ -6,6 +6,7 @@ import { collection, addDoc, setDoc, doc, getDoc, getDocs, where, query } from '
 import { auth, db } from "../config/firebase";
 import { useRouter } from "next/navigation";
 import Loader from '../components/loaders/Loader'
+import { notify } from "../utils/notify";
 
 const AuthContext = createContext({})
 
@@ -94,7 +95,7 @@ export const AuthContextProvider = ({children}) => {
         try {
             sendPasswordResetEmail(auth, email)
                 .then(() => {
-                    console.log("Email sent")
+                    notify("success", "Email sent", null, null, null)
                 })
                 .catch((err) => {
                     console.error(err)

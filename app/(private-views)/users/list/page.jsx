@@ -15,189 +15,67 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { HiSortAscending, HiSortDescending } from 'react-icons/hi'
 import axios from 'axios'
-import { IoOpenOutline, IoPencil, IoSearch, IoToggle, IoTrash } from 'react-icons/io5'
+import { IoPencil, IoSearch, IoTrash } from 'react-icons/io5'
 import { notify, notifyLoading } from '../../../../utils/notify'
 import Link from 'next/link'
 import { v4 } from 'uuid'
-import DeleteProductModal from '../../../../components/modals/DeleteProductModal'
+import DeleteUserModal from '../../../../components/modals/DeleteUserModal'
 import ProductsTableSkeleton from '../../../../components/skeleton/ProductsTableSkeleton'
+import { useAuth } from '../../../../contexts/AuthContext'
 
-const ProductsList = () => {
+const UsersList = () => {
+    const { user } = useAuth()
+
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-    const [productToBeDeleted, setProductToBeDeleted] = useState({})
+    const [userToBeDeleted, setUserToBeDeleted] = useState({})
     const [sorting, setSorting] = useState([])
     const [searchValue, setSearchValue] = useState('')
 
-    const handleCloseDeleteProductModal = () => {
+    const handleCloseDeleteUserModal = () => {
         setIsDeleteDialogOpen(false)
-        setProductToBeDeleted({})
+        setUserToBeDeleted({})
     }
 
-    const handleOpenDeleteProductModal = (info) => {
+    const handleOpenDeleteUserModal = (info) => {
+        console.log(info)
         setIsDeleteDialogOpen(true)
-        setProductToBeDeleted(info)
+        setUserToBeDeleted(info)
     }
 
-    const productsListQuery = useQuery({
-		queryKey: ['admin-products'],
-        queryFn: async () => await axios.post('/api/monitors/products/list').then((res) => res.data),
+    const handleDeleteUser = async (uid) => {
+        const toastId = notifyLoading('Deleting user ...')
+
+        await axios.delete('/api/monitors/users/delete', { params: { uid: uid } }).then((response) => {
+            if (response.status === 200) {
+                notify('success', 'User Deleted Successfully', null, null, toastId)
+                usersListQuery.refetch()
+            }
+        }).catch((err) => {
+            console.error(err)
+            notify('error', 'Could not delete user!', null, null, toastId)
+        })
+    }
+
+    const usersListQuery = useQuery({
+		queryKey: ['admin-users'],
+        queryFn: async () => await axios.post('/api/monitors/users/list').then((res) => res.data),
         refetchOnMount: 'always'
     })
 
-    const handleUpdateProductStatus = async (currentStatus, pid) => {
-        const toastId = notifyLoading('Updating product ...')
-
-        let data = currentStatus === 'active' ? 'inactive' : 'active'
-        await axios.post('/api/monitors/products/update', { data: data, pid: pid, type: 'status' }).then((response) => {
-            if (response.status === 200) {
-                notify('success', 'Updated Successfully', null, null, toastId)
-                productsListQuery.refetch()
-            }
-        }).catch((err) => {
-            console.error(err)
-            notify('error', 'Could not update product!', null, null, toastId)
-        })
-    }
-
-    const handleUpdateProductNewFlag = async (isNew, pid) => {
-        const toastId = notifyLoading('Updating product ...')
-
-        let data = isNew === 'new_yes' ? 'new_no' : 'new_yes'
-        await axios.post('/api/monitors/products/update', { data: data, pid: pid, type: 'new' }).then((response) => {
-            if (response.status === 200) {
-                notify('success', 'Updated Successfully', null, null, toastId)
-                productsListQuery.refetch()
-            }
-        }).catch((err) => {
-            console.error(err)
-            notify('error', 'Could not update product!', null, null, toastId)
-        })
-    }
-
-    const handleDeleteProduct = async (pid) => {
-        const toastId = notifyLoading('Deleting product ...')
-
-        await axios.delete('/api/monitors/products/delete', { params: { pid: pid } }).then((response) => {
-            if (response.status === 200) {
-                notify('success', 'product Deleted Successfully', null, null, toastId)
-                productsListQuery.refetch()
-            }
-        }).catch((err) => {
-            console.error(err)
-            notify('error', 'Could not delete product!', null, null, toastId)
-        })
-    }
-
-    const renderProductImage = (info) => {
-        const [amplifiedImageClasses, setAmplifiedImageClasses] = useState('')
-        return (
-            <div className='flex justify-center'>
-                <img
-                    src={info.getValue()} alt=""
-                    className={`h-[30px] w-[30px] object-cover rounded-full border border-slate-300 shadow-xl cursor-pointer ${amplifiedImageClasses}`}
-                    onClick={() => amplifiedImageClasses === '' ? setAmplifiedImageClasses('w-[400px] h-[400px] absolute left-10 top-10 z-50 rounded-lg') : setAmplifiedImageClasses('')}
-                />
-            </div>
+    const renderUserType = (info) => {
+        return info.getValue().type === 'admin' ? (
+            <div className='mx-auto py-1 px-4 font-semibold text-sm text-green-500 bg-yellow-500/10 border-2 border-green-500 rounded-full w-fit'>Admin</div>
+        ) : (
+            <div className='mx-auto py-1 px-4 font-semibold text-sm text-blue-500 bg-blue-500/10 border-2 border-blue-500 rounded-full w-fit'>Editor</div>
         )
     }
 
-    const renderProductName = (info) => {
-        return (
-            <div className='flex flex-col whitespace-nowrap'>
-                <small aria-hidden="true" className='text-primary-200 text-xs'>{info.getValue().sub}</small>
-                <p className='font-semibold'>{info.getValue().name}</p>
-            </div>
-        )
-    }
-
-    const renderProductCategory = (info) => {
-        let categoryName
-
-        switch (info.getValue()) {
-            case 'acai':
-                categoryName = 'Açaí'
-                break;
-            case 'pitaya':
-                categoryName = 'Pitaya'
-                break;
-            case 'granola':
-                categoryName = 'Granola'
-                break;
-            case 'organic_iqf':
-                categoryName = 'Organic IQF'
-                break;
-            case 'conventional_iqf':
-                categoryName = 'Conventional IQF'
-                break;
-            case 'dry_goods':
-                categoryName = 'Dry Goods'
-                break;
-            case 'honey':
-                categoryName = 'Honey'
-                break;
-            case 'coconut':
-                categoryName = 'Coconut'
-                break;
-            default:
-                categoryName = 'Not Provided / Not Listed'
-                break;
-        }
-        return (
-            <div className='whitespace-nowrap'>
-                {categoryName}
-            </div>
-        )
-    }
-
-    const renderProductNew = (info) => {
-        let displayNew = info.getValue().new === 'new_yes' ? 'Flagged as New' : 'Regular Product'
-        return (
-            <div className='flex items-center justify-between w-full'>
-                <div className='flex flex-col'>
-                    <p className='font-semibold'>{displayNew}</p>
-                    <small className='text-slate-400'>Show label in product card</small>
-                </div>
-                <IoToggle className={`text-3xl ml-4 cursor-pointer ${info.getValue().new === 'new_yes' ? 'text-green-500' : 'text-slate-500 rotate-180'}`}
-                    onClick={() => handleUpdateProductNewFlag(info.getValue().new, info.getValue().pid)}
-                />
-            </div>
-        )
-    }
-
-    const renderProductStatus = (info) => {
-        let displayStatus = info.getValue().status === 'active' ? 'Active' : 'Inactive'
-        return (
-            <div className='flex items-center justify-between w-full whitespace-nowrap'>
-                <div className='flex flex-col'>
-                    <p className='font-semibold'>{displayStatus}</p>
-                    <small className='text-slate-400'>Product will be invisible when inactive</small>
-                </div>
-                <IoToggle className={`text-3xl ml-4 cursor-pointer ${info.getValue().status === 'active' ? 'text-green-500' : 'text-slate-500 rotate-180'}`}
-                    onClick={() => handleUpdateProductStatus(info.getValue().status, info.getValue().pid)}
-                />
-            </div>
-        )
-    }
-
-    const renderProductPage = (info) => {
-        return (
-            <Link
-                className='flex items-center gap-2 px-4 h-[30px] text-sm font-semibold rounded-md text-blue-500 w-fit whitespace-nowrap hover:underline'
-                href={{pathname: `/products/${info.getValue().category}`, query: { product: JSON.stringify(info.getValue()) }}}
-                target='_blank'
-            >
-                View Product Page
-                <IoOpenOutline/>
-            </Link>
-        )
-    }
-
-    const renderEditProductButton = (info) => {
+    const renderEditUserButton = (info) => {
         if (!info) return ''
 
         return (
             <Link key={v4()}
-                className='flex items-center justify-center bg-blue-500 w-[30px] h-[30px] rounded-md shadow-lg'
+                className='flex items-center justify-center bg-blue-500 w-[30px] h-[30px] rounded-md shadow-lg pointer-events-none opacity-50'
                 href={{pathname: `/products/edit/${info.getValue().category}`, query: { product: JSON.stringify(info.getValue()) }}}
             >
                 <IoPencil className='text-sm text-slate-200 p-0 m-0'/>
@@ -205,13 +83,13 @@ const ProductsList = () => {
         )
     }
 
-    const renderDeleteProductButton = (info) => {
+    const renderDeleteUserButton = (info) => {
         if (!info) return ''
 
         return (
             <button key={v4()}
                 className='flex items-center justify-center bg-red-500 w-[30px] h-[30px] rounded-md shadow-lg'
-                onClick={() => handleOpenDeleteProductModal(info.getValue())}
+                onClick={() => handleOpenDeleteUserModal(info.getValue())}
             >
                 <IoTrash className='text-sm text-slate-200 p-0 m-0'/>
             </button>
@@ -221,8 +99,10 @@ const ProductsList = () => {
     const renderMonitorActions = (info) => {
         let actions = [];
 
-        actions.push(renderEditProductButton(info))
-        actions.push(renderDeleteProductButton(info))
+        if (!info || user.type !== 'admin') return ''
+
+        actions.push(renderEditUserButton(info))
+        actions.push(renderDeleteUserButton(info))
 
         return actions;
     }
@@ -230,55 +110,22 @@ const ProductsList = () => {
     const columnHelper = createColumnHelper()
 
     const columns = [
-        columnHelper.accessor('image_full', {
-            header: () => <div className='text-center'>Image</div>,
-            cell: info => renderProductImage(info),
-            enableSorting: false,
-            enableColumnFilter: false
-        }),
-        columnHelper.accessor('sku', {
+        columnHelper.accessor('uid', {
             cell: info => <div className='whitespace-nowrap'>{info.getValue()}</div>,
-            header: () => <div>SKU</div>,
+            header: () => <div>ID</div>
+        }),
+        columnHelper.accessor('displayName', {
+            cell: info => <div className='whitespace-nowrap'>{info.getValue()}</div>,
+            header: () => <div>Name</div>,
+        }),
+        columnHelper.accessor('email', {
+            cell: info => <div className='whitespace-nowrap'>{info.getValue()}</div>,
+            header: () => <div>Email</div>,
         }),
         columnHelper.accessor(row => row, {
-            id: 'name',
-            header: () => <div className="flex items-center justify-between">
-                Name
-            </div>,
-            cell: info => renderProductName(info)
-        }),
-        columnHelper.accessor('category', {
-            header: () => <div className="flex items-center justify-between">
-                Category
-            </div>,
-            cell: info => renderProductCategory(info),
-        }),
-        columnHelper.accessor(row => row, {
-            id: 'new',
-            enableSorting: false,
-            enableColumnFilter: false,
-            cell: info => <div className='flex justify-center whitespace-nowrap'>{renderProductNew(info)}</div>,
-            header: () => <div className="flex items-center justify-between">
-                New Product Flag
-            </div>
-        }),
-        columnHelper.accessor(row => row, {
-            id: 'status',
-            enableSorting: false,
-            enableColumnFilter: false,
-            header: () => <div className="flex items-center justify-between">
-                Product Status
-            </div>,
-            cell: info => renderProductStatus(info)
-        }),
-        columnHelper.accessor(row => row, {
-            id: 'product_page',
-            enableSorting: false,
-            enableColumnFilter: false,
-            header: () => <div className="flex items-center justify-center">
-                Product Page
-            </div>,
-            cell: info => <div className='flex justify-center'>{renderProductPage(info)}</div>,
+            id: 'type',
+            cell: info => renderUserType(info),
+            header: () => <div className='mx-auto'>Type</div>
         }),
         columnHelper.accessor(row => row, {
             id: 'actions',
@@ -286,11 +133,11 @@ const ProductsList = () => {
             enableColumnFilter: false,
             header: () => <div className='text-center'>Actions</div>,
             cell: info => <div className='flex items-center justify-center gap-2 whitespace-nowrap'>{renderMonitorActions(info)}</div>
-        }),
+        })
     ]
 
     const table = useReactTable({
-        data: productsListQuery.data,
+        data: usersListQuery.data,
         columns,
 		getCoreRowModel: getCoreRowModel(),
     	getPaginationRowModel: getPaginationRowModel(),
@@ -311,18 +158,18 @@ const ProductsList = () => {
         enableSortingRemoval: false,
     })
 
-    return (
+    return user ? (
         <PrivateLayout>
-            <main className="p-5 w-full min-h-[800px] 4xl:min-h-[1000px] relative pb-28">
+            <main className="p-5 w-full xl:w-10/12 mx-auto min-h-[300px] 2xl:min-h-[670px] 4xl:min-h-[970px]">
                 {
-                    productsListQuery.isError ? <p>Something went Wrong</p> : null
+                    usersListQuery.isError ? <p>Something went Wrong</p> : null
                 }
                 {
-                    productsListQuery.isLoading ? (
+                    usersListQuery.isLoading ? (
                         <ProductsTableSkeleton />
                     )
                     :
-                    Array.isArray(productsListQuery.data) && productsListQuery.data.length > 0 ? (
+                    Array.isArray(usersListQuery.data) && usersListQuery.data.length > 0 ? (
                         <>
                             <div className='w-full xl:w-10/12 mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between'>
                                 <div>
@@ -412,11 +259,11 @@ const ProductsList = () => {
                                         Showing
                                         <span className="font-semibold text-slate-800 mx-2">
                                         {
-                                            productsListQuery.data.length > table.getState().pagination.pageSize ? table.getState().pagination.pageSize : productsListQuery.data.length
+                                            usersListQuery.data.length > table.getState().pagination.pageSize ? table.getState().pagination.pageSize : usersListQuery.data.length
                                         }
                                         </span>
                                         of
-                                        <span className="font-semibold text-slate-800 mx-2">{productsListQuery.data.length}</span>
+                                        <span className="font-semibold text-slate-800 mx-2">{usersListQuery.data.length}</span>
                                         Records
                                     </span>
                                 </div>
@@ -473,15 +320,17 @@ const ProductsList = () => {
                     ) : null
                 }
             </main>
-            <DeleteProductModal
+            <DeleteUserModal
                 isDeleteDialogOpen={isDeleteDialogOpen}
                 setIsDeleteDialogOpen={setIsDeleteDialogOpen}
-                product={productToBeDeleted}
-                closeModal={handleCloseDeleteProductModal}
-                handleDeleteProduct={handleDeleteProduct}
+                user={userToBeDeleted}
+                closeModal={handleCloseDeleteUserModal}
+                handleDeleteUser={handleDeleteUser}
             />
         </PrivateLayout>
+    ) : (
+        <strong>Not allowed</strong>
     )
 }
 
-export default ProductsList
+export default UsersList

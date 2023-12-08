@@ -1,6 +1,6 @@
 "use client"
 
-import { IoLogoInstagram, IoLogoFacebook, IoCall, IoWalk, IoHomeOutline, IoLeafOutline, IoMailOutline, IoBagHandleOutline, IoList, IoGridOutline, IoBagAddOutline, IoPersonAddOutline, IoArchive, IoArrowDown, IoChevronDown, IoTabletLandscape, IoLockClosed } from 'react-icons/io5'
+import { IoLogoInstagram, IoLogoFacebook, IoCall, IoWalk, IoHomeOutline, IoLeafOutline, IoMailOutline, IoBagHandleOutline, IoList, IoGridOutline, IoBagAddOutline, IoPersonAddOutline, IoArchive, IoArrowDown, IoChevronDown, IoTabletLandscape, IoLockClosed, IoPeopleOutline } from 'react-icons/io5'
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -67,8 +67,8 @@ const MainNavigation = () => {
 
 				{
 					user ? (
-						<div className={`hidden h-full 2xl:flex items-center ${!user ? '4xl:w-4/12 justify-end' : ''}`}>
-							<Menu as="div" className="relative mr-6">
+						<div className={`hidden h-full lg:flex items-center ${!user ? '4xl:w-4/12 justify-end' : ''}`}>
+							<Menu as="div" className="relative mr-4">
 								<div>
 								<Menu.Button className="flex w-full justify-between items-center rounded-md bg-slate-100 text-primary-500 font-semibold h-[50px] px-4 hover:shadow-lg">
 									<IoLockClosed
@@ -93,9 +93,9 @@ const MainNavigation = () => {
 											{({ active }) => (
 												<Link
 													href="/products/list"
-													className={`${active ? 'bg-primary-200 text-white' : ''} group flex w-full items-center rounded-md px-2 py-2 text-md font-semibold`}
+													className={`${active ? 'bg-slate-100' : ''} group flex w-full items-center rounded-md px-2 py-2 text-md font-semibold`}
 												>
-													<IoGridOutline className={`text-lg ${active ? 'text-white' : 'text-secondary-500'}`}/>
+													<IoGridOutline className={`text-lg ${active ? 'text-primary-300' : 'text-secondary-500'}`}/>
 													Products List
 												</Link>
 											)}
@@ -104,10 +104,21 @@ const MainNavigation = () => {
 											{({ active }) => (
 												<Link
 													href="/products/create"
-													className={`${active ? 'bg-primary-200 text-white' : ''} group flex w-full items-center rounded-md px-2 py-2 text-md font-semibold`}
+													className={`${active ? 'bg-slate-100' : ''} group flex w-full items-center rounded-md px-2 py-2 text-md font-semibold`}
 												>
-													<IoBagAddOutline className={`text-lg ${active ? 'text-white' : 'text-secondary-500'}`}/>
+													<IoBagAddOutline className={`text-lg ${active ? 'text-primary-300' : 'text-secondary-500'}`}/>
 													Create Product
+												</Link>
+											)}
+										</Menu.Item>
+										<Menu.Item className="flex items-center gap-2">
+											{({ active }) => (
+												<Link
+													href="/users/list"
+													className={`${active ? 'bg-slate-100' : ''} group flex w-full items-center rounded-md px-2 py-2 text-md font-semibold`}
+												>
+													<IoPeopleOutline className={`text-lg ${active ? 'text-primary-300' : 'text-secondary-500'}`}/>
+													Users
 												</Link>
 											)}
 										</Menu.Item>
@@ -117,9 +128,9 @@ const MainNavigation = () => {
 														{({ active }) => (
 															<Link
 																href="/users/create"
-																className={`${active ? 'bg-primary-200 text-white' : ''} group flex w-full items-center rounded-md px-2 py-2 text-md font-semibold`
+																className={`${active ? 'bg-slate-100' : ''} group flex w-full items-center rounded-md px-2 py-2 text-md font-semibold`
 															}>
-																<IoPersonAddOutline className={`text-lg ${active ? 'text-white' : 'text-secondary-500'}`}/>
+																<IoPersonAddOutline className={`text-lg ${active ? 'text-primary-300' : 'text-secondary-500'}`}/>
 																Create User
 															</Link>
 														)}
@@ -130,7 +141,7 @@ const MainNavigation = () => {
 								</Menu.Items>
 								</Transition>
 							</Menu>
-							<div className='3xl:border-l-2 border-slate-200 p-4 flex items-center'>
+							<div className='lg:border-l-2 border-slate-200 p-4 flex items-center'>
 								<div className='hidden 3xl:flex flex-col text-right'>
 									<small className='text-slate-400'>👋 Welcome back,</small>
 									<strong className='text-primary-500 font-bold'>{user?.displayName}</strong>
