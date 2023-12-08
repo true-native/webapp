@@ -173,8 +173,8 @@ const UsersList = () => {
                         <>
                             <div className='w-full xl:w-10/12 mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between'>
                                 <div>
-                                    <h1 className='mt-5 text-2xl text-primary-400 font-bold'>Listed Products</h1>
-                                    <p>These are all the products available in the system.</p>
+                                    <h1 className='mt-5 text-2xl text-primary-400 font-bold'>Listed User</h1>
+                                    <p>These are all the users in the system.</p>
                                 </div>
                                 <div className="flex items-center mt-6 w-full lg:w-fit xl:mt-0">
                                     <div className="relative w-full">
